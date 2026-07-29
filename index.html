@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Career Lab — Fahim Abrar</title>
 <meta name="description" content="Turn any job posting into an ATS match report and eight rehearsed interview stories, built only from what you actually did." />
+<meta property="og:title" content="Career Lab — by Fahim Abrar" />
+<meta property="og:description" content="Paste a job posting. Get an ATS match report, tailored resume bullets, and eight rehearsed STAR interview stories — built only from what you actually did." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://analyst47.github.io/career-lab/" />
+<meta name="twitter:card" content="summary" />
 <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -130,7 +135,7 @@ button,input,textarea,select{font:inherit;color:inherit}
 
 /* ---------------- workspace ---------------- */
 .ws{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.switch{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:46px 0 44px}
+.switch{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:46px 0 44px}
 @media (max-width:900px){.switch{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:520px){.switch{grid-template-columns:1fr}}
 .sw{
@@ -246,13 +251,48 @@ button,input,textarea,select{font:inherit;color:inherit}
   .brief-h h4,.brief-h .cat{color:#000!important}
   .brief-n,.skey b{color:#000!important}
 }
+
+/* ---------------- v3: byline, tracker, overlays, chat ---------------- */
+.brandwrap{display:flex;align-items:baseline;gap:14px;min-width:0}
+.byline{font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-2);text-decoration:none;white-space:nowrap;transition:color .18s}
+.byline:hover{color:var(--ink)}
+@media(max-width:760px){.byline{display:none}}
+.ov{position:fixed;inset:0;z-index:120;background:rgba(23,24,26,.46);display:grid;place-items:center;padding:22px}
+.ov[hidden]{display:none}
+.ov-in{background:var(--cream);border-radius:var(--r);padding:38px;max-width:560px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,.28);max-height:92vh;overflow:auto}
+.ov-wide{max-width:880px}
+@media(max-width:640px){.ov-in{padding:24px}}
+.timer{font-family:var(--f-mono);font-size:22px;min-width:70px;text-align:right}
+.timer.low{color:var(--clay-2)}
+.jobrow{border:1px solid var(--line);border-radius:var(--r-sm);padding:15px 18px;margin-bottom:10px;background:var(--white);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.jobrow b{font-size:15.5px;letter-spacing:-.02em}
+.jobrow .meta{font-family:var(--f-mono);font-size:11px;color:var(--gray-2);margin-top:3px}
+.jobrow select{padding:8px 10px;border:1px solid var(--line-2);border-radius:8px;background:var(--white);font-size:13px}
+.scorechip{font-family:var(--f-mono);font-size:12px;padding:5px 10px;border-radius:6px;background:var(--cream-2)}
+.gline{display:flex;align-items:center;gap:12px;margin-top:10px}
+.gline .gname{font-family:var(--f-mono);width:200px;flex:none;font-size:12px;color:var(--ink-2)}
+.gbar{height:10px;background:var(--amber);border-radius:99px;opacity:.85;flex:none}
+.gline .n{font-family:var(--f-mono);font-size:11px;color:var(--gray)}
+input[type=file]{font-size:14px;color:var(--gray);max-width:100%}
+input[type=file]::file-selector-button{margin-right:14px;padding:10px 18px;border:1px solid var(--line-2);border-radius:8px;background:var(--white);cursor:pointer;font:inherit;font-size:13.5px;font-weight:700;transition:border-color .18s}
+input[type=file]::file-selector-button:hover{border-color:var(--ink)}
+.ovchip[hidden]{display:none}
+.ovchip{display:inline-flex;align-items:center;gap:12px;margin-top:12px;padding:9px 14px;background:var(--green-soft);border:1px solid var(--green-line);border-radius:8px;font-family:var(--f-mono);font-size:12.5px;color:var(--green)}
+.ovchip button{border:0;background:none;cursor:pointer;color:inherit;font-size:16px;line-height:1;padding:0}
+.chatlog{margin:22px 0 16px;max-height:46vh;min-height:120px;overflow:auto;display:flex;flex-direction:column;gap:10px}
+.msg{padding:12px 15px;border-radius:12px;font-size:14.5px;line-height:1.6;max-width:86%;white-space:pre-wrap}
+.msg.i{background:var(--ink);color:var(--cream);align-self:flex-start;border-bottom-left-radius:4px}
+.msg.c{background:var(--white);border:1px solid var(--line);align-self:flex-end;border-bottom-right-radius:4px}
 </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="wrap nav-in">
-    <a class="logo" href="#top"><span class="logo-dot"></span>Career Lab</a>
+    <div class="brandwrap">
+      <a class="logo" href="#top"><span class="logo-dot"></span>Career Lab</a>
+      <a class="byline" href="https://fahimabrar.me">by Fahim Abrar</a>
+    </div>
     <div class="nav-links">
       <a href="#method">Method</a>
       <a href="#work">Workspace</a>
@@ -391,8 +431,12 @@ button,input,textarea,select{font:inherit;color:inherit}
         <span class="k">03</span><span class="t">Experience bank</span>
         <span class="d">The only material anything is built from</span>
       </button>
+      <button class="sw" role="tab" data-tab="track" aria-selected="false">
+        <span class="k">04</span><span class="t">Tracker</span>
+        <span class="d">Every application, its score, and what keeps blocking you</span>
+      </button>
       <button class="sw" role="tab" data-tab="set" aria-selected="false">
-        <span class="k">04</span><span class="t">Settings</span>
+        <span class="k">05</span><span class="t">Settings</span>
         <span class="d">API key, model, stored data</span>
       </button>
     </div>
@@ -405,6 +449,12 @@ button,input,textarea,select{font:inherit;color:inherit}
         <div class="field">
           <label for="rJD">Job description</label>
           <textarea id="rJD" class="tall" placeholder="Paste the full posting — responsibilities, requirements, qualifications."></textarea>
+        </div>
+        <div class="field">
+          <label for="rFile">Resume for this scan (optional)</label>
+          <input type="file" id="rFile" accept=".pdf,.docx,.txt,.md" />
+          <p class="hint">PDF, DOCX, or TXT. When set, scans and generated bullets use this file instead of your experience bank. Read entirely in your browser — never uploaded anywhere.</p>
+          <div class="ovchip" id="rOv" hidden><span></span><button class="ovclear" aria-label="Clear uploaded resume" title="Clear">&times;</button></div>
         </div>
         <div class="bar">
           <button class="btn btn-dark" id="rScan">Scan posting</button>
@@ -429,6 +479,12 @@ button,input,textarea,select{font:inherit;color:inherit}
           <div style="margin-top:28px">
             <span class="mono">Gaps to address</span>
             <div class="chips" id="rGaps"></div>
+          </div>
+          <div class="bar" style="margin-top:30px">
+            <input type="text" id="tCo" class="inp" style="max-width:220px" placeholder="Company" />
+            <input type="text" id="tRole" class="inp" style="max-width:240px" placeholder="Role title" />
+            <button class="btn btn-dark btn-sm" id="rSave">Save to tracker</button>
+            <span class="stat-line" id="tStat"></span>
           </div>
         </div>
         <div class="card">
@@ -465,6 +521,12 @@ button,input,textarea,select{font:inherit;color:inherit}
           <textarea id="pJD" class="tall" placeholder="Paste the full posting, including the about-us section."></textarea>
         </div>
         <div class="field">
+          <label for="pFile">Resume for these briefs (optional)</label>
+          <input type="file" id="pFile" accept=".pdf,.docx,.txt,.md" />
+          <p class="hint">When set, the eight stories are built from this file instead of your experience bank. Read entirely in your browser.</p>
+          <div class="ovchip" id="pOv" hidden><span></span><button class="ovclear" aria-label="Clear uploaded resume" title="Clear">&times;</button></div>
+        </div>
+        <div class="field">
           <label style="display:flex;align-items:center;gap:11px;font-weight:500;cursor:pointer;font-size:15.5px">
             <input type="checkbox" id="pResearch" checked style="width:17px;height:17px;accent-color:#17181A" />
             Research the company on the web first
@@ -484,6 +546,8 @@ button,input,textarea,select{font:inherit;color:inherit}
       </div>
 
       <div class="bar no-print" id="pTools" hidden>
+        <button class="btn btn-dark btn-sm" id="pReh">Rehearse</button>
+        <button class="btn btn-white btn-sm" id="pMock">Mock interview</button>
         <button class="btn btn-white btn-sm" id="pPrint">Print study sheet</button>
         <button class="btn btn-white btn-sm" id="pClear">Clear briefs</button>
       </div>
@@ -544,6 +608,25 @@ button,input,textarea,select{font:inherit;color:inherit}
       </div>
     </div>
 
+    <!-- ---------- TRACKER ---------- -->
+    <div class="panel" data-panel="track" role="tabpanel" hidden>
+      <div class="card on-white" id="gapCard" hidden>
+        <h3>What keeps blocking you</h3>
+        <p class="card-note" id="gapNote"></p>
+        <div id="gapBars" style="margin-top:10px"></div>
+      </div>
+      <div class="card on-white">
+        <h3>Applications</h3>
+        <p class="card-note">Scan a posting in ATS match, save it here. Load any row to bring its posting, score, and briefs back exactly as they were.</p>
+        <div id="jobList" style="margin-top:20px"></div>
+        <div class="bar">
+          <button class="btn btn-white btn-sm" id="csvBtn">Export CSV</button>
+          <span class="sp"></span>
+          <span class="stat-line" id="jStat"></span>
+        </div>
+      </div>
+    </div>
+
     <!-- ---------- SETTINGS ---------- -->
     <div class="panel" data-panel="set" role="tabpanel" hidden>
       <div class="card on-white">
@@ -593,6 +676,60 @@ button,input,textarea,select{font:inherit;color:inherit}
     <p>&copy; <span id="yr"></span> · <a href="https://fahimabrar.me">fahimabrar.me</a></p>
   </div>
 </footer>
+
+<!-- first visit -->
+<div class="ov" id="ownOv" hidden>
+  <div class="ov-in">
+    <span class="mono">Welcome</span>
+    <h3 style="margin-top:12px">This is Fahim Abrar's Career Lab</h3>
+    <p class="card-note">It ships loaded with his record as a working example so you can see every feature working. Which are you?</p>
+    <div class="bar" style="margin-top:26px">
+      <button class="btn btn-dark" id="ownMe">I'm Fahim — keep my record</button>
+      <button class="btn btn-white" id="ownYou">I'm a visitor — use my own resume</button>
+    </div>
+  </div>
+</div>
+
+<!-- rehearse -->
+<div class="ov" id="rehOv" hidden>
+  <div class="ov-in ov-wide">
+    <div class="bar" style="margin-top:0">
+      <span class="mono" id="rehPos"></span><span class="sp"></span>
+      <span class="timer" id="rehT">1:30</span>
+      <button class="btn btn-white btn-sm" id="rehTimer">Start 90s</button>
+      <button class="btn btn-white btn-sm" id="rehClose">Close</button>
+    </div>
+    <div class="mono" id="rehCat" style="margin-top:28px;color:var(--clay)"></div>
+    <h3 id="rehTitle" style="font-size:clamp(24px,3vw,36px);margin-top:8px;letter-spacing:-.03em"></h3>
+    <p class="card-note" id="rehHint">Say it out loud from memory first. Then reveal and check yourself against what you wrote.</p>
+    <div id="rehBody" hidden style="margin-top:16px;font-size:15.5px;line-height:1.7"></div>
+    <div id="rehFU" hidden class="note note-clay"></div>
+    <div class="bar" style="margin-top:28px">
+      <button class="btn btn-dark btn-sm" id="rehReveal">Reveal story</button>
+      <button class="btn btn-white btn-sm" id="rehShowFU">Follow-ups</button>
+      <span class="sp"></span>
+      <button class="btn btn-white btn-sm" id="rehPrev">&larr; Prev</button>
+      <button class="btn btn-white btn-sm" id="rehNext">Next &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- mock interview -->
+<div class="ov" id="mockOv" hidden>
+  <div class="ov-in ov-wide">
+    <div class="bar" style="margin-top:0">
+      <span class="mono">Mock interview</span><span class="sp"></span>
+      <select id="mockStory" class="inp" style="max-width:340px"></select>
+      <button class="btn btn-white btn-sm" id="mockClose">Close</button>
+    </div>
+    <div id="mockLog" class="chatlog"></div>
+    <div class="bar" style="margin-top:0">
+      <input type="text" id="mockIn" class="inp" style="flex:1;min-width:200px" placeholder="Answer like you're in the room… type 'feedback' to end" />
+      <button class="btn btn-dark btn-sm" id="mockSend">Send</button>
+      <span class="stat-line" id="mockStat"></span>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ============================================================
@@ -720,7 +857,7 @@ const TAXONOMY = [
 /* ============================================================
    APP
    ============================================================ */
-const LS={key:"cl.key",gkey:"cl.gkey",prov:"cl.prov",model:"cl.model",gmodel:"cl.gmodel",exp:"cl.exp",prof:"cl.prof",jd:"cl.jd",co:"cl.co",role:"cl.role",out:"cl.out"};
+const LS={key:"cl.key",gkey:"cl.gkey",prov:"cl.prov",model:"cl.model",gmodel:"cl.gmodel",gmodels:"cl.gmodels",exp:"cl.exp",prof:"cl.prof",jobs:"cl.jobs",owner:"cl.owner",active:"cl.active",jd:"cl.jd",co:"cl.co",role:"cl.role",out:"cl.out"};
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const store={
@@ -744,7 +881,7 @@ function terms(text){
   const hay=" "+String(text).replace(/[\n\r]+/g," ")+" ";
   return RX.filter(e=>e.p.some(rx=>rx.test(hay))).map(e=>e.t);
 }
-const corpus=()=>[PROF.headline||"",(PROF.skills||[]).join(" "),EXP.map(e=>e.title+" "+e.body).join(" ")].join(" ");
+const corpus=()=>OVERRIDE?OVERRIDE.text:[PROF.headline||"",(PROF.skills||[]).join(" "),EXP.map(e=>e.title+" "+e.body).join(" ")].join(" ");
 function analyze(jd){
   const jt=terms(jd), mine=new Set(terms(corpus()));
   const hits=jt.filter(t=>mine.has(t)), gaps=jt.filter(t=>!mine.has(t));
@@ -779,7 +916,7 @@ function switchTo(name){
 
 /* ---------- prompts ---------- */
 function storyPrompt({jd,company,role,research}){
-  const bank=EXP.map(e=>`### ${e.title}\n${e.body}`).join("\n\n");
+  const bank=bankSrc();
   const cats=CATEGORIES.map((c,i)=>`${i+1}. ${c.name} — ${c.brief}`).join("\n");
   return `You are preparing a candidate for a behavioral interview. Shape their REAL experience into eight STAR stories. You are not writing fiction.
 
@@ -847,7 +984,7 @@ function resumePrompt(jd){
 ${PROF.name||"Candidate"} — ${PROF.headline||"(no headline set)"}
 
 ## Experience bank (only permitted source)
-${r.map(e=>`### ${e.title}\n${e.body}`).join("\n\n")}
+${bankSrc()}
 
 ## Job description
 """
@@ -882,20 +1019,43 @@ ${txt}
 }
 
 /* ---------- API ---------- */
+const GEMINI_FALLBACK=[
+  {v:"gemini-flash-latest",l:"gemini-flash-latest — auto-updates, never breaks"},
+  {v:"gemini-3.6-flash",l:"gemini-3.6-flash — current stable"},
+  {v:"gemini-3.5-flash",l:"gemini-3.5-flash"},
+  {v:"gemini-3.5-flash-lite",l:"gemini-3.5-flash-lite — fastest"}];
 const MODELS={
   anthropic:[
     {v:"claude-sonnet-5",l:"Claude Sonnet 5 — balanced, good default"},
     {v:"claude-opus-5",l:"Claude Opus 5 — strongest, slower"},
     {v:"claude-haiku-4-5-20251001",l:"Claude Haiku 4.5 — fastest, cheapest"}],
-  gemini:[
-    {v:"gemini-2.5-flash",l:"Gemini 2.5 Flash — free tier, good default"},
-    {v:"gemini-2.5-pro",l:"Gemini 2.5 Pro — stronger, tighter free limits"}]
+  get gemini(){return store.get(LS.gmodels,GEMINI_FALLBACK)}
 };
+/* Ask Google which models this key can use, so retirements never break the site. */
+async function refreshGeminiModels(){
+  const key=keyFor("gemini"); if(!key) return false;
+  try{
+    const res=await fetch("https://generativelanguage.googleapis.com/v1beta/models?pageSize=50",
+      {headers:{"x-goog-api-key":key}});
+    if(!res.ok) return false;
+    const data=await res.json();
+    const list=(data.models||[])
+      .filter(m=>(m.supportedGenerationMethods||[]).includes("generateContent"))
+      .map(m=>String(m.name||"").replace(/^models\//,""))
+      .filter(n=>/^gemini-/.test(n)&&!/(image|tts|audio|live|embed|exp)/.test(n))
+      .sort().reverse()
+      .map(n=>({v:n,l:n}));
+    if(!list.length) return false;
+    store.set(LS.gmodels,list);
+    if(!list.some(m=>m.v===store.get(LS.gmodel,""))) store.set(LS.gmodel,list[0].v);
+    return true;
+  }catch{return false}
+}
 const prov=()=>store.get(LS.prov,"gemini");
 const keyFor=p=>store.get(p==="gemini"?LS.gkey:LS.key,"");
 const modelFor=p=>store.get(p==="gemini"?LS.gmodel:LS.model,MODELS[p][0].v);
 
-async function callClaude(prompt,{research,onStatus}={}){
+async function callClaude(prompt,{research,onStatus,retried}={}){
   const p=prov(), key=keyFor(p);
   if(!key) throw new Error(`No ${p==="gemini"?"Gemini":"Anthropic"} key saved. Add one in Settings, or use Copy prompt.`);
   onStatus?.(research?"Researching the company…":"Writing…");
@@ -909,6 +1069,10 @@ async function callClaude(prompt,{research,onStatus}={}){
     });
     if(!res.ok){
       let d="";try{const j=await res.json();d=j?.error?.message||""}catch{}
+      if(res.status===404&&!retried&&await refreshGeminiModels()){
+        return callClaude(prompt,{research,onStatus,retried:true});
+      }
+      if(res.status===404) throw new Error("Model unavailable for this key. Open Settings — the list refreshes from Google — pick a model and retry.");
       if(res.status===400&&/key|credential/i.test(d)) throw new Error("Gemini rejected the key — AI Studio keys start with AIza. Check Settings.");
       if(res.status===429) throw new Error("Gemini free-tier limit hit. Wait a minute and retry.");
       throw new Error(`Gemini error ${res.status}${d?": "+d.slice(0,140):""}`);
@@ -1000,9 +1164,109 @@ function renderBriefs(data){
   host.appendChild(list);
 }
 
+/* ---------- per-request resume override ---------- */
+let OVERRIDE=null;
+const _scripts={};
+function loadScript(src){
+  if(_scripts[src]) return _scripts[src];
+  _scripts[src]=new Promise((res,rej)=>{
+    const el=document.createElement("script");
+    el.src=src; el.onload=()=>res(); el.onerror=()=>rej(new Error("Couldn't load the file reader — check your connection, or paste the resume text into the bank instead."));
+    document.head.appendChild(el);
+  });
+  return _scripts[src];
+}
+async function fileToText(file){
+  const name=file.name.toLowerCase();
+  if(/\.(txt|md)$/.test(name)) return await file.text();
+  if(name.endsWith(".pdf")){
+    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js");
+    pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    const doc=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+    const out=[];
+    for(let i=1;i<=doc.numPages;i++){
+      const tc=await (await doc.getPage(i)).getTextContent();
+      out.push(tc.items.map(x=>x.str).join(" "));
+    }
+    return out.join("\n");
+  }
+  if(name.endsWith(".docx")){
+    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js");
+    const r=await mammoth.extractRawText({arrayBuffer:await file.arrayBuffer()});
+    return r.value;
+  }
+  throw new Error("Unsupported file — use PDF, DOCX, TXT or MD.");
+}
+function paintOverride(){
+  ["rOv","pOv"].forEach(id=>{
+    const el=$("#"+id); if(!el)return;
+    el.hidden=!OVERRIDE;
+    if(OVERRIDE) el.querySelector("span").textContent=OVERRIDE.name;
+  });
+}
+const bankSrc=()=>OVERRIDE
+  ? "### Uploaded resume ("+OVERRIDE.name+")\n"+OVERRIDE.text
+  : EXP.map(e=>"### "+e.title+"\n"+e.body).join("\n\n");
+
+/* ---------- tracker ---------- */
+let JOBS=store.get(LS.jobs,[]);
+const saveJobs=()=>store.set(LS.jobs,JOBS);
+const STATUSES=["saved","applied","screening","interview","offer","rejected"];
+const fmtDate=d=>new Date(d).toLocaleDateString(undefined,{month:"short",day:"numeric"});
+function renderJobs(){
+  const host=$("#jobList"); if(!host)return;
+  const act=store.get(LS.active,null);
+  host.innerHTML=JOBS.length?JOBS.slice().sort((a,b)=>b.date-a.date).map(j=>`
+    <div class="jobrow"${j.id===act?' style="border-color:var(--ink)"':''}>
+      <div style="flex:1;min-width:180px"><b>${esc(j.company)}</b>${j.role?" — "+esc(j.role):""}
+        <div class="meta">${fmtDate(j.date)}${j.briefs?" · briefs saved":""}</div></div>
+      <span class="scorechip">${j.score}%</span>
+      <select data-id="${j.id}" data-k="st">${STATUSES.map(x=>`<option${x===j.status?" selected":""}>${x}</option>`).join("")}</select>
+      <button class="btn btn-white btn-sm" data-id="${j.id}" data-k="load">Load</button>
+      <button class="x" data-id="${j.id}" data-k="del" title="Delete" aria-label="Delete">&times;</button>
+    </div>`).join("")
+  :'<p class="card-note">Nothing saved yet. Scan a posting, then hit Save to tracker.</p>';
+  renderGaps();
+}
+function renderGaps(){
+  const card=$("#gapCard"); if(!card)return;
+  if(JOBS.length<2){card.hidden=true;return}
+  const tally={};
+  JOBS.forEach(j=>(j.gaps||[]).forEach(g=>tally[g]=(tally[g]||0)+1));
+  const top=Object.entries(tally).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  if(!top.length){card.hidden=true;return}
+  card.hidden=false;
+  $("#gapNote").textContent=`Requirements you couldn't evidence, counted across ${JOBS.length} saved postings. The top of this list is your next certification or project.`;
+  const mx=top[0][1];
+  $("#gapBars").innerHTML=top.map(([g,n])=>
+    `<div class="gline"><span class="gname">${esc(g)}</span><div class="gbar" style="width:${Math.round(n/mx*190)}px"></div><span class="n">${n} of ${JOBS.length}</span></div>`).join("");
+}
+function mockPrompt(story,msgs){
+  const bank=bankSrc();
+  const tr=msgs.map(m=>(m.r==="i"?"Interviewer":"Candidate")+": "+m.t).join("\n");
+  return `You are a sharp, fair hiring interviewer for a security analyst role, probing ONE behavioral story the candidate prepared. Rules: one short question per reply, no praise padding, dig when answers are vague, challenge anything inconsistent with the candidate's real record below. After the candidate has answered about 5 questions, or if they say "feedback", stop questioning and give: two genuine strengths, two weaknesses, and a tighter 30-second retelling of their story in their voice.
+
+The prepared story:
+Category: ${story.category}
+Title: ${story.title}
+Situation: ${story.situation}
+Task: ${story.task}
+Action: ${story.action}
+Result: ${story.result}
+
+Candidate's real record (ground truth):
+${bank}
+
+Transcript so far:
+${tr||"(none — open with your first question about this story)"}
+
+Reply with ONLY your next interviewer message. Plain text, no formatting.`;
+}
+
 /* ---------- boot ---------- */
 document.addEventListener("DOMContentLoaded",()=>{
   $("#yr").textContent=new Date().getFullYear();
+  if(/^gemini-2\./.test(store.get(LS.gmodel,""))) store.set(LS.gmodel,GEMINI_FALLBACK[0].v);
   $$(".sw").forEach(b=>b.addEventListener("click",()=>switchTo(b.dataset.tab)));
   renderExp();
   if(BRIEFS) renderBriefs(BRIEFS);
@@ -1020,12 +1284,15 @@ document.addEventListener("DOMContentLoaded",()=>{
     const t=rJD.value.trim();
     if(t.length<60){stat($("#rStat"),"Paste the job description first.","err");return}
     const a=analyze(t), rk=ranked(t).filter(e=>e.w>0);
+    window.__scan={score:a.score,hits:a.hits,gaps:a.gaps,jd:t};
     $("#rOut").hidden=false;
     $("#rScore").textContent=a.score+"%";
     $("#rMeter").style.width=a.score+"%";
     $("#rMeta").textContent=`${a.hits.length} of ${a.jt.length} detected requirements evidenced by your material`;
     chips($("#rHits"),a.hits,"chip-hit"); chips($("#rGaps"),a.gaps,"chip-gap");
-    $("#rPicks").innerHTML = rk.length ? rk.map((e,i)=>
+    $("#rPicks").innerHTML = OVERRIDE
+      ? `<p class="card-note">Scoring against the uploaded resume "${esc(OVERRIDE.name)}". Entry ranking applies to the experience bank only — clear the upload to see it.</p>`
+      : rk.length ? rk.map((e,i)=>
       `<div class="pick"><span class="r">/ ${String(i+1).padStart(2,"0")}</span>
         <div><b>${esc(e.title)}</b><div class="chips">${e.ov.map(t=>`<span class="chip chip-hit">${esc(t)}</span>`).join("")}</div></div>
       </div>`).join("")
@@ -1068,6 +1335,8 @@ document.addEventListener("DOMContentLoaded",()=>{
       const p=parseJSON(raw);
       if(!p.stories?.length) throw new Error("Response came back without stories. Try again.");
       BRIEFS=p; store.set(LS.out,p); renderBriefs(p);
+      const _aid=store.get(LS.active,null), _aj=JOBS.find(x=>x.id===_aid);
+      if(_aj){_aj.briefs=p; saveJobs(); renderJobs();}
       stat($("#pStat"),`${p.stories.length} briefs ready.`,"ok");
       $("#pOut").scrollIntoView({behavior:"smooth",block:"start"});
     }catch(e){stat($("#pStat"),e.message,"err")}finally{b.disabled=false}
@@ -1148,6 +1417,9 @@ document.addEventListener("DOMContentLoaded",()=>{
     k.placeholder=keyFor(p)?"••••••••••••••••••••  (saved)":(p==="gemini"?"AIza…":"sk-ant-…");
   }
   paintSettings();
+  if(prov()==="gemini"&&keyFor("gemini")){
+    refreshGeminiModels().then(ok=>{if(ok&&prov()==="gemini")paintSettings()});
+  }
   $("#provSel").addEventListener("change",e=>{store.set(LS.prov,e.target.value);paintSettings()});
   $("#modelSel").addEventListener("change",e=>store.set(prov()==="gemini"?LS.gmodel:LS.model,e.target.value));
   $("#saveKey").addEventListener("click",()=>{
@@ -1156,6 +1428,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     store.set(prov()==="gemini"?LS.gkey:LS.key,v);
     paintSettings();
     stat($("#sStat"),"Key saved to this browser only.","ok");
+    if(prov()==="gemini") refreshGeminiModels().then(ok=>{if(ok&&prov()==="gemini")paintSettings()});
   });
   $("#clearKey").addEventListener("click",()=>{
     store.del(prov()==="gemini"?LS.gkey:LS.key);
@@ -1166,6 +1439,138 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(!confirm("Erase everything this site has stored in your browser?"))return;
     Object.values(LS).forEach(store.del); location.reload();
   });
+
+  /* tracker */
+  renderJobs();
+  $("#rSave").addEventListener("click",()=>{
+    const sc=window.__scan;
+    if(!sc){stat($("#tStat"),"Scan the posting first.","err");return}
+    const co=$("#tCo").value.trim();
+    if(!co){stat($("#tStat"),"Company name required.","err");return}
+    const j={id:Date.now(),company:co,role:$("#tRole").value.trim(),jd:sc.jd,score:sc.score,
+             hits:sc.hits,gaps:sc.gaps,status:"saved",date:Date.now(),briefs:null};
+    JOBS.push(j); saveJobs(); store.set(LS.active,j.id);
+    $("#pCo").value=co; $("#pRole").value=j.role; store.set(LS.co,co); store.set(LS.role,j.role);
+    renderJobs(); stat($("#tStat"),"Saved — it's in the Tracker tab.","ok");
+  });
+  $("#jobList").addEventListener("click",e=>{
+    const k=e.target.dataset.k; if(!k)return;
+    const id=+e.target.dataset.id, j=JOBS.find(x=>x.id===id); if(!j)return;
+    if(k==="del"){
+      if(!confirm("Delete this application?"))return;
+      JOBS=JOBS.filter(x=>x.id!==id);
+      if(store.get(LS.active,null)===id)store.del(LS.active);
+      saveJobs(); renderJobs();
+    }
+    if(k==="load"){
+      store.set(LS.active,id);
+      $("#rJD").value=j.jd; $("#pJD").value=j.jd; store.set(LS.jd,j.jd);
+      $("#pCo").value=j.company; $("#pRole").value=j.role||"";
+      store.set(LS.co,j.company); store.set(LS.role,j.role||"");
+      if(j.briefs){BRIEFS=j.briefs; store.set(LS.out,BRIEFS); renderBriefs(BRIEFS);}
+      switchTo("resume"); renderJobs();
+      document.getElementById("work").scrollIntoView({behavior:"smooth"});
+    }
+  });
+  $("#jobList").addEventListener("change",e=>{
+    if(e.target.dataset.k!=="st")return;
+    const j=JOBS.find(x=>x.id===+e.target.dataset.id);
+    if(j){j.status=e.target.value; saveJobs();}
+  });
+  $("#csvBtn").addEventListener("click",()=>{
+    if(!JOBS.length){stat($("#jStat"),"Nothing to export.","err");return}
+    const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+    const rows=[["company","role","date","score","status","top gaps"].map(q).join(",")]
+      .concat(JOBS.map(j=>[j.company,j.role,new Date(j.date).toISOString().slice(0,10),
+        j.score+"%",j.status,(j.gaps||[]).slice(0,5).join("; ")].map(q).join(",")));
+    const blob=new Blob([rows.join("\r\n")],{type:"text/csv"});
+    const u=URL.createObjectURL(blob),a=document.createElement("a");
+    a.href=u;a.download="applications.csv";a.click();URL.revokeObjectURL(u);
+    stat($("#jStat"),JOBS.length+" rows exported.","ok");
+  });
+
+  /* first visit */
+  if(!store.get(LS.owner,null)) $("#ownOv").hidden=false;
+  $("#ownMe").addEventListener("click",()=>{store.set(LS.owner,"me");$("#ownOv").hidden=true});
+  $("#ownYou").addEventListener("click",()=>{
+    store.set(LS.owner,"visitor");$("#ownOv").hidden=true;
+    switchTo("bank");document.getElementById("work").scrollIntoView();
+  });
+
+  /* resume override */
+  async function takeFile(inp,st){
+    const f=inp.files&&inp.files[0]; if(!f)return;
+    stat(st,"Reading "+f.name+"…","load");
+    try{
+      const text=(await fileToText(f)).trim();
+      if(text.length<200) throw new Error("Couldn't read enough text from that file — try a TXT export, or paste it into the bank.");
+      OVERRIDE={name:f.name,text}; paintOverride();
+      stat(st,"Using "+f.name+" for this scan and generation.","ok");
+    }catch(err){stat(st,err.message,"err")}
+    inp.value="";
+  }
+  $("#rFile").addEventListener("change",()=>takeFile($("#rFile"),$("#rStat")));
+  $("#pFile").addEventListener("change",()=>takeFile($("#pFile"),$("#pStat")));
+  $$(".ovclear").forEach(b=>b.addEventListener("click",()=>{OVERRIDE=null;paintOverride()}));
+
+  /* rehearse */
+  let rIdx=0,rInt=null,rLeft=90;
+  const stories=()=>(BRIEFS&&BRIEFS.stories)||[];
+  const stopT=()=>{if(rInt){clearInterval(rInt);rInt=null}};
+  const tShow=()=>{const m=Math.floor(rLeft/60),x=String(rLeft%60).padStart(2,"0");
+    $("#rehT").textContent=m+":"+x;$("#rehT").classList.toggle("low",rLeft<=15)};
+  function rehPaint(){
+    const st=stories()[rIdx]; if(!st)return;
+    $("#rehPos").textContent="Story "+(rIdx+1)+" of "+stories().length;
+    $("#rehCat").textContent=st.category||"";
+    $("#rehTitle").textContent=st.title||"";
+    $("#rehBody").hidden=true; $("#rehFU").hidden=true; $("#rehHint").hidden=false;
+    $("#rehBody").innerHTML=["situation","task","action","result"].map(kk=>st[kk]
+      ?'<p style="margin-top:12px"><b style="color:var(--clay)">'+kk[0].toUpperCase()+kk.slice(1)+'.</b> '+esc(st[kk])+'</p>':"").join("");
+    $("#rehFU").innerHTML="<b>They will ask:</b> "+(st.followUps||[]).map(esc).join("  ·  ");
+    stopT(); rLeft=90; tShow();
+  }
+  $("#pReh").addEventListener("click",()=>{if(!stories().length)return;rIdx=0;$("#rehOv").hidden=false;rehPaint()});
+  $("#rehClose").addEventListener("click",()=>{stopT();$("#rehOv").hidden=true});
+  $("#rehPrev").addEventListener("click",()=>{rIdx=(rIdx-1+stories().length)%stories().length;rehPaint()});
+  $("#rehNext").addEventListener("click",()=>{rIdx=(rIdx+1)%stories().length;rehPaint()});
+  $("#rehReveal").addEventListener("click",()=>{$("#rehBody").hidden=false;$("#rehHint").hidden=true});
+  $("#rehShowFU").addEventListener("click",()=>{$("#rehFU").hidden=false});
+  $("#rehTimer").addEventListener("click",()=>{stopT();rLeft=90;tShow();
+    rInt=setInterval(()=>{rLeft--;tShow();if(rLeft<=0)stopT()},1000)});
+  document.addEventListener("keydown",e=>{
+    if(e.key!=="Escape")return;
+    ["rehOv","mockOv"].forEach(i=>{const o=document.getElementById(i);if(o&&!o.hidden){o.hidden=true;stopT()}});
+  });
+
+  /* mock interview */
+  let mockMsgs=[];
+  const paintMock=()=>{
+    $("#mockLog").innerHTML=mockMsgs.map(m=>'<div class="msg '+m.r+'">'+esc(m.t)+'</div>').join("");
+    $("#mockLog").scrollTop=$("#mockLog").scrollHeight;
+  };
+  async function mockAsk(){
+    const st=stories()[+$("#mockStory").value]; if(!st)return;
+    $("#mockSend").disabled=true; stat($("#mockStat"),"Thinking…","load");
+    try{
+      const out=await callClaude(mockPrompt(st,mockMsgs));
+      mockMsgs.push({r:"i",t:out}); paintMock(); stat($("#mockStat"),"","ok");
+    }catch(err){stat($("#mockStat"),err.message,"err")}
+    finally{$("#mockSend").disabled=false}
+  }
+  $("#pMock").addEventListener("click",()=>{
+    if(!stories().length)return;
+    $("#mockStory").innerHTML=stories().map((st,i)=>'<option value="'+i+'">'+(i+1)+". "+esc(st.category||"")+'</option>').join("");
+    mockMsgs=[]; paintMock(); $("#mockOv").hidden=false; mockAsk();
+  });
+  $("#mockClose").addEventListener("click",()=>{$("#mockOv").hidden=true});
+  $("#mockStory").addEventListener("change",()=>{mockMsgs=[];paintMock();mockAsk()});
+  const mockGo=()=>{
+    const v=$("#mockIn").value.trim(); if(!v)return;
+    mockMsgs.push({r:"c",t:v}); $("#mockIn").value=""; paintMock(); mockAsk();
+  };
+  $("#mockSend").addEventListener("click",mockGo);
+  $("#mockIn").addEventListener("keydown",e=>{if(e.key==="Enter")mockGo()});
 });
 </script>
 </body>
