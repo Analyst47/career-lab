@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Career Lab — Fahim Abrar</title>
+<meta name="description" content="Turn any job posting into an ATS match report and eight rehearsed interview stories, built only from what you actually did." />
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   Career Lab — single file. Nothing external except fonts.
+   ============================================================ */
+:root{
+  --cream:#F4F2ED; --cream-2:#EBE8E1; --white:#FFFFFF;
+  --ink:#17181A; --ink-2:#2A2C2F;
+  --gray:#6B6D70; --gray-2:#9A9C9F;
+  --line:#E2DFD8; --line-2:#D3CFC6;
+  --clay:#DD8A5C; --clay-2:#C9744A; --clay-soft:#F6E6DA;
+  --green:#2E7D5B; --green-soft:#E4F0EA; --green-line:#BFDCCD;
+  --amber:#A8701C; --amber-soft:#F8ECD9; --amber-line:#E8D3AC;
+  --red:#B3382C; --red-soft:#FAE7E4;
+  --f-sans:'Satoshi','Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --f-mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+  --r:16px; --r-sm:10px; --r-pill:999px;
+  --maxw:1240px;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+body{
+  margin:0;background:var(--cream);color:var(--ink);
+  font-family:var(--f-sans);font-size:17px;line-height:1.6;font-weight:400;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+}
+h1,h2,h3,h4{margin:0;font-weight:700;line-height:1.05;letter-spacing:-.035em}
+p{margin:0}
+a{color:inherit}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:4px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+@media (max-width:640px){.wrap{padding:0 20px}}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.mono{font-family:var(--f-mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-2)}
+
+/* ---------------- nav ---------------- */
+.nav{position:sticky;top:0;z-index:60;background:rgba(244,242,237,.86);backdrop-filter:blur(12px)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:84px;gap:24px}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;font-weight:900;font-size:22px;letter-spacing:-.04em}
+.logo-dot{width:10px;height:10px;border-radius:50%;background:var(--clay);flex:none}
+.nav-links{display:flex;gap:38px}
+.nav-links a{text-decoration:none;font-size:16px;font-weight:500;color:var(--ink);opacity:.78;transition:opacity .18s}
+.nav-links a:hover{opacity:1}
+@media (max-width:900px){.nav-links{display:none}}
+
+/* ---------------- buttons ---------------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:16px 30px;border-radius:var(--r-sm);border:1px solid transparent;
+  font-size:16px;font-weight:700;letter-spacing:-.01em;cursor:pointer;text-decoration:none;
+  transition:background .18s,color .18s,border-color .18s,transform .08s;white-space:nowrap;
+}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-dark{background:var(--ink);color:var(--cream)}
+.btn-dark:hover:not(:disabled){background:#000}
+.btn-line{background:transparent;color:var(--ink);border-color:var(--line-2)}
+.btn-line:hover:not(:disabled){border-color:var(--ink);background:rgba(23,24,26,.03)}
+.btn-white{background:var(--white);color:var(--ink);border-color:var(--line)}
+.btn-white:hover:not(:disabled){border-color:var(--line-2)}
+.btn-sm{padding:11px 20px;font-size:14.5px;border-radius:8px}
+.btn-nav{padding:13px 24px;font-size:15px}
+.btn .arw{transition:transform .18s}
+.btn:hover .arw{transform:translateX(4px)}
+
+/* ---------------- hero ---------------- */
+.hero{padding:88px 0 96px;text-align:center}
+@media (max-width:700px){.hero{padding:52px 0 64px}}
+.hero h1{
+  font-size:clamp(42px,7.2vw,94px);font-weight:700;line-height:.98;
+  letter-spacing:-.045em;max-width:16ch;margin:0 auto;
+}
+.hero h1 .clay{color:var(--clay)}
+.hero-sub{
+  margin:34px auto 0;max-width:64ch;font-size:clamp(17px,1.6vw,21px);
+  line-height:1.55;color:var(--gray);font-weight:400;
+}
+.hero-cta{display:flex;gap:14px;justify-content:center;margin-top:42px;flex-wrap:wrap}
+.hero-proof{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:44px;flex-wrap:wrap}
+.hero-proof .dots{display:flex;gap:5px}
+.hero-proof .dots i{width:7px;height:7px;border-radius:50%;background:var(--clay);display:block}
+.hero-proof span{font-size:15px;color:var(--gray)}
+
+/* ---------------- credential grid (hairline cards) ---------------- */
+.credgrid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--line);
+  gap:1px;margin-top:12px;
+}
+@media (max-width:900px){.credgrid{grid-template-columns:repeat(2,1fr)}}
+.cred{background:var(--white);padding:34px 26px;text-align:center}
+.cred b{display:block;font-size:clamp(26px,3vw,38px);font-weight:700;letter-spacing:-.04em;line-height:1}
+.cred span{display:block;margin-top:10px;font-size:14px;color:var(--gray);line-height:1.4}
+
+/* ---------------- sections ---------------- */
+.sec{padding:110px 0}
+@media (max-width:700px){.sec{padding:68px 0}}
+.sec-cream2{background:var(--cream-2)}
+.sec-head{max-width:22ch}
+.sec-head h2{font-size:clamp(30px,4.4vw,54px);line-height:1.04;letter-spacing:-.04em}
+.sec-lead{max-width:56ch;margin-top:26px;font-size:clamp(16px,1.5vw,19px);color:var(--gray);line-height:1.65}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+@media (max-width:960px){.split{grid-template-columns:1fr;gap:44px}}
+.split-copy p+p{margin-top:20px}
+
+/* ---------------- numbered steps ---------------- */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:56px}
+@media (max-width:940px){.steps{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.steps{grid-template-columns:1fr}}
+.step{background:var(--cream);padding:34px 28px}
+.step .n{font-family:var(--f-mono);font-size:12.5px;color:var(--clay);letter-spacing:.08em}
+.step h3{margin:16px 0 10px;font-size:20px;letter-spacing:-.03em}
+.step p{font-size:15px;color:var(--gray);line-height:1.6}
+
+/* ---------------- workspace ---------------- */
+.ws{background:var(--white);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.switch{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:46px 0 44px}
+@media (max-width:900px){.switch{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.switch{grid-template-columns:1fr}}
+.sw{
+  appearance:none;border:0;background:var(--white);padding:24px 22px;text-align:left;cursor:pointer;
+  transition:background .18s;display:block;
+}
+.sw:hover{background:var(--cream)}
+.sw[aria-selected="true"]{background:var(--ink)}
+.sw .k{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray-2)}
+.sw[aria-selected="true"] .k{color:var(--clay)}
+.sw .t{display:block;margin-top:9px;font-size:19px;font-weight:700;letter-spacing:-.03em;line-height:1.15}
+.sw[aria-selected="true"] .t{color:var(--white)}
+.sw .d{display:block;margin-top:6px;font-size:13.5px;color:var(--gray);line-height:1.45}
+.sw[aria-selected="true"] .d{color:rgba(255,255,255,.62)}
+.panel[hidden]{display:none}
+
+/* ---------------- cards / forms ---------------- */
+.card{background:var(--white);border:1px solid var(--line);border-radius:var(--r);padding:34px}
+.card.on-white{background:var(--cream)}
+.card+.card{margin-top:20px}
+@media (max-width:640px){.card{padding:24px}}
+.card h3{font-size:23px;letter-spacing:-.03em}
+.card-note{margin-top:10px;font-size:15px;color:var(--gray);line-height:1.55}
+.field{margin-top:24px}
+.field label{display:block;font-size:14px;font-weight:700;margin-bottom:9px;letter-spacing:-.01em}
+.field .hint{margin-top:8px;font-size:13.5px;color:var(--gray-2);line-height:1.5}
+.inp,.field textarea,.field select,.field input[type=text],.field input[type=password]{
+  width:100%;padding:14px 16px;border:1px solid var(--line-2);border-radius:var(--r-sm);
+  background:var(--white);font-size:15.5px;line-height:1.55;transition:border-color .18s;
+}
+.inp:focus,.field textarea:focus,.field select:focus,.field input:focus{border-color:var(--ink);outline:none}
+.field textarea{min-height:150px;resize:vertical}
+.field textarea.tall{min-height:290px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media (max-width:700px){.g2{grid-template-columns:1fr}}
+.bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:28px}
+.bar .sp{flex:1}
+.stat-line{font-family:var(--f-mono);font-size:13px;color:var(--gray);display:flex;align-items:center;gap:9px}
+.stat-line.err{color:var(--red)}
+.stat-line.ok{color:var(--green)}
+.spin{width:13px;height:13px;border:2px solid var(--line-2);border-top-color:var(--ink);border-radius:50%;animation:sp .7s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.note{border-radius:var(--r-sm);padding:16px 18px;font-size:14.5px;line-height:1.55;margin-top:24px}
+.note-clay{background:var(--clay-soft);color:#7A4520}
+.note-amber{background:var(--amber-soft);color:var(--amber)}
+.note b{font-weight:700}
+
+/* ---------------- chips / score ---------------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font-family:var(--f-mono);font-size:11.5px;padding:6px 11px;border-radius:6px;border:1px solid transparent;letter-spacing:.02em}
+.chip-hit{background:var(--green-soft);color:var(--green);border-color:var(--green-line)}
+.chip-gap{background:var(--amber-soft);color:var(--amber);border-color:var(--amber-line)}
+.chip-nil{background:var(--cream-2);color:var(--gray);border-color:var(--line)}
+.scorebox{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.scorenum{font-size:clamp(52px,7vw,86px);font-weight:700;letter-spacing:-.05em;line-height:.9}
+.scoremeta{font-size:15px;color:var(--gray);padding-bottom:8px}
+.meter{height:8px;background:var(--cream-2);border-radius:var(--r-pill);overflow:hidden;margin-top:22px}
+.meter i{display:block;height:100%;background:var(--ink);border-radius:var(--r-pill);transition:width .6s cubic-bezier(.4,0,.2,1)}
+
+/* ---------------- experience bank ---------------- */
+.exp{border:1px solid var(--line);border-radius:var(--r-sm);padding:20px;margin-top:14px;background:var(--white)}
+.exp-top{display:flex;gap:14px;align-items:flex-start}
+.exp-t{flex:1;border:0;background:transparent;font-size:17px;font-weight:700;letter-spacing:-.02em;padding:3px 0;border-bottom:1px dashed transparent}
+.exp-t:hover{border-bottom-color:var(--line-2)}
+.exp-t:focus{border-bottom-color:var(--ink);outline:none}
+.exp-b{width:100%;margin-top:12px;min-height:104px;resize:vertical;border:1px solid var(--line);border-radius:8px;padding:13px 15px;font-size:14.5px;line-height:1.6;background:var(--cream)}
+.exp-b:focus{border-color:var(--ink);outline:none}
+.x{flex:none;width:34px;height:34px;border:1px solid var(--line);border-radius:8px;background:transparent;cursor:pointer;color:var(--gray);font-size:17px;line-height:1;display:grid;place-items:center}
+.x:hover{background:var(--red-soft);border-color:#E8C4BF;color:var(--red)}
+
+/* ---------------- briefs ---------------- */
+.briefs{display:grid;gap:22px;margin-top:26px}
+.brief{background:var(--white);border:1px solid var(--line-2);border-radius:var(--r);overflow:hidden;break-inside:avoid}
+.brief-h{display:flex;gap:18px;align-items:flex-start;padding:24px 28px;background:var(--ink)}
+.brief-n{flex:none;font-family:var(--f-mono);font-size:12.5px;color:var(--clay);padding-top:4px;letter-spacing:.06em}
+.brief-h .cat{font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+.brief-h h4{margin-top:7px;font-size:24px;font-weight:700;letter-spacing:-.035em;color:var(--white);line-height:1.12}
+.srow{display:grid;grid-template-columns:130px 1fr;gap:22px;padding:20px 28px;border-bottom:1px solid var(--cream-2)}
+.srow:last-child{border-bottom:0}
+@media (max-width:660px){.srow{grid-template-columns:1fr;gap:6px;padding:18px 22px}}
+.skey b{display:block;font-size:19px;font-weight:700;color:var(--clay);letter-spacing:-.02em}
+.skey span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gray-2)}
+.sval{font-size:16px;line-height:1.7;color:var(--ink-2)}
+.brief-flag{margin:0 28px 22px;padding:14px 16px;border-radius:var(--r-sm);background:var(--amber-soft);font-size:14px;color:var(--amber);line-height:1.55}
+.brief-f{padding:20px 28px;background:var(--cream);border-top:1px solid var(--line)}
+.brief-f .src{font-size:14px;color:var(--gray);margin-top:6px}
+.brief-f ul{margin:8px 0 0;padding-left:20px;font-size:14px;color:var(--gray);line-height:1.6}
+.rnote{background:var(--white);border:1px solid var(--line);border-left:3px solid var(--clay);border-radius:0 var(--r) var(--r) 0;padding:26px 30px;margin-top:26px}
+.rnote h3{font-size:20px;margin-top:8px}
+.rnote p{margin-top:12px;font-size:15.5px;color:var(--gray);line-height:1.65}
+.rnote ul{margin:12px 0 0;padding-left:20px;font-size:15px;line-height:1.7;color:var(--ink-2)}
+.rnote h4{margin-top:22px;font-size:16px;letter-spacing:-.02em}
+
+/* ---------------- ranked list ---------------- */
+.pick{border:1px solid var(--line);border-radius:var(--r-sm);padding:16px 18px;margin-top:10px;display:flex;gap:16px;align-items:flex-start;background:var(--white)}
+.pick .r{flex:none;font-family:var(--f-mono);font-size:11.5px;color:var(--clay);padding-top:3px}
+.pick b{font-size:15.5px;letter-spacing:-.02em}
+
+/* ---------------- footer ---------------- */
+.foot{padding:56px 0}
+.foot-in{display:flex;justify-content:space-between;gap:22px;flex-wrap:wrap;align-items:center}
+.foot p{font-size:14.5px;color:var(--gray)}
+.foot a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line-2)}
+
+/* ---------------- print ---------------- */
+@media print{
+  .nav,.foot,.hero,.switch,.bar,.no-print,.sec-cream2,.credgrid,.steps{display:none!important}
+  body{background:#fff;font-size:11pt}
+  .sec,.ws{padding:0;border:0}
+  .card{border:0;padding:0;background:#fff}
+  .brief{border:1px solid #999;page-break-inside:avoid;margin-bottom:14pt}
+  .brief-h{background:#fff!important;border-bottom:2px solid #000}
+  .brief-h h4,.brief-h .cat{color:#000!important}
+  .brief-n,.skey b{color:#000!important}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top"><span class="logo-dot"></span>Career Lab</a>
+    <div class="nav-links">
+      <a href="#method">Method</a>
+      <a href="#work">Workspace</a>
+      <a href="#work" onclick="switchTo('resume')">ATS match</a>
+      <a href="#work" onclick="switchTo('prep')">Interview briefs</a>
+    </div>
+    <a class="btn btn-dark btn-nav" href="#work">Open workspace</a>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <h1>Stop guessing what they'll <span class="clay">ask</span>.</h1>
+    <p class="hero-sub">
+      Paste a job posting. Get an ATS match report against your real experience, resume bullets
+      rewritten in the posting's own vocabulary, and the eight behavioural stories every interview
+      turns on — every one of them traceable to something you actually did.
+    </p>
+    <div class="hero-cta">
+      <a class="btn btn-dark" href="#work">Scan a job posting</a>
+      <a class="btn btn-line" href="#method">See how it works <span class="arw">&rarr;</span></a>
+    </div>
+    <div class="hero-proof">
+      <span class="dots"><i></i><i></i><i></i><i></i><i></i></span>
+      <span>Nothing invented. Every line traceable to your own record.</span>
+    </div>
+  </div>
+</header>
+
+<!-- ==================== CREDENTIALS ==================== -->
+<section class="wrap" style="padding-bottom:96px">
+  <div class="credgrid">
+    <div class="cred"><b>1.5 yrs</b><span>Security analyst, Rowan IRT Information Security Office</span></div>
+    <div class="cred"><b>75%</b><span>Reduction in analyst reporting time through Python automation</span></div>
+    <div class="cred"><b>CMU</b><span>Heinz College summer cybersecurity research fellowship</span></div>
+    <div class="cred"><b>3.8</b><span>GPA — Computing &amp; Informatics, cybersecurity minor</span></div>
+  </div>
+</section>
+
+<!-- ==================== PROBLEM ==================== -->
+<section class="sec sec-cream2" id="method">
+  <div class="wrap split">
+    <div class="split-copy">
+      <h2 style="font-size:clamp(30px,4.4vw,54px)">You have real experience and a generic resume</h2>
+      <p style="margin-top:28px;font-size:19px;color:var(--gray);line-height:1.65">
+        Most tools rewrite you to fit the posting. That works right up until an interviewer asks a
+        follow-up about something you never did — and then the whole application is suspect, not just
+        that line.
+      </p>
+      <p style="margin-top:20px;font-size:19px;color:var(--gray);line-height:1.65">
+        This works the other way round. You write down what actually happened, once. Every output —
+        the match report, the bullets, the eight stories — gets assembled from that record and nothing
+        else. When the material is thin, it says so instead of filling the gap for you.
+      </p>
+      <div class="hero-cta" style="justify-content:flex-start;margin-top:36px">
+        <a class="btn btn-dark" href="#work">Open the workspace <span class="arw">&rarr;</span></a>
+      </div>
+    </div>
+    <div>
+      <svg viewBox="0 0 520 420" role="img" aria-label="An isometric grid of application steps with one path lit" style="width:100%;height:auto">
+        <defs>
+          <pattern id="iso" width="52" height="30" patternUnits="userSpaceOnUse" patternTransform="translate(0,0)">
+            <path d="M0 15 L26 0 L52 15 L26 30 Z" fill="none" stroke="#D3CFC6" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect x="10" y="60" width="500" height="300" fill="url(#iso)" opacity=".9"/>
+        <!-- stacked blocks -->
+        <g stroke="#C9C4B9" stroke-width="1.2" fill="none">
+          <path d="M140 200 L192 170 L244 200 L192 230 Z"/>
+          <path d="M140 200 L140 228 L192 258 L192 230 Z"/>
+          <path d="M244 200 L244 228 L192 258 L192 230 Z"/>
+          <path d="M248 150 L300 120 L352 150 L300 180 Z"/>
+          <path d="M248 150 L248 186 L300 216 L300 180 Z"/>
+          <path d="M352 150 L352 186 L300 216 L300 180 Z"/>
+          <path d="M196 268 L248 238 L300 268 L248 298 Z"/>
+          <path d="M196 268 L196 292 L248 322 L248 298 Z"/>
+          <path d="M300 268 L300 292 L248 322 L248 298 Z"/>
+        </g>
+        <!-- the lit path -->
+        <path d="M92 244 L192 186 L300 122" fill="none" stroke="#DD8A5C" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="7 8"/>
+        <circle cx="92" cy="244" r="26" fill="#DD8A5C"/>
+        <circle cx="300" cy="122" r="9" fill="#DD8A5C"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="steps">
+      <div class="step">
+        <span class="n">/ 01</span>
+        <h3>Fill the bank</h3>
+        <p>Ten entries are pre-loaded from your record. Add detail — especially the parts that went badly. Those make the best stories.</p>
+      </div>
+      <div class="step">
+        <span class="n">/ 02</span>
+        <h3>Scan the posting</h3>
+        <p>Requirements get extracted and matched against your bank. You see what you can evidence and what you can't. No key needed.</p>
+      </div>
+      <div class="step">
+        <span class="n">/ 03</span>
+        <h3>Generate</h3>
+        <p>Tailored bullets in the posting's vocabulary, and eight STAR briefs shaped for this specific employer.</p>
+      </div>
+      <div class="step">
+        <span class="n">/ 04</span>
+        <h3>Rehearse out loud</h3>
+        <p>Print the briefs and say them. Ninety seconds each. The likely follow-up questions are printed on every card.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== WORKSPACE ==================== -->
+<section class="ws sec" id="work">
+  <div class="wrap">
+    <div class="sec-head no-print">
+      <span class="mono">Workspace</span>
+      <h2 style="margin-top:16px">Four tools, one record</h2>
+    </div>
+    <p class="sec-lead no-print">
+      Everything is stored in this browser only — your experience bank, your key, your generated briefs.
+      Nothing is uploaded and there is no server.
+    </p>
+
+    <div class="switch no-print" role="tablist" aria-label="Workspace tools">
+      <button class="sw" role="tab" data-tab="resume" aria-selected="true">
+        <span class="k">01</span><span class="t">ATS match</span>
+        <span class="d">Score a posting, see gaps, draft tailored bullets</span>
+      </button>
+      <button class="sw" role="tab" data-tab="prep" aria-selected="false">
+        <span class="k">02</span><span class="t">Interview briefs</span>
+        <span class="d">Eight STAR stories, researched for the employer</span>
+      </button>
+      <button class="sw" role="tab" data-tab="bank" aria-selected="false">
+        <span class="k">03</span><span class="t">Experience bank</span>
+        <span class="d">The only material anything is built from</span>
+      </button>
+      <button class="sw" role="tab" data-tab="set" aria-selected="false">
+        <span class="k">04</span><span class="t">Settings</span>
+        <span class="d">API key, model, stored data</span>
+      </button>
+    </div>
+
+    <!-- ---------- ATS MATCH ---------- -->
+    <div class="panel" data-panel="resume" role="tabpanel">
+      <div class="card on-white">
+        <h3>ATS match</h3>
+        <p class="card-note">The scan runs entirely in your browser and costs nothing. Drafting bullets needs a key.</p>
+        <div class="field">
+          <label for="rJD">Job description</label>
+          <textarea id="rJD" class="tall" placeholder="Paste the full posting — responsibilities, requirements, qualifications."></textarea>
+        </div>
+        <div class="bar">
+          <button class="btn btn-dark" id="rScan">Scan posting</button>
+          <button class="btn btn-white" id="rGen">Draft tailored bullets</button>
+          <button class="btn btn-white" id="rCopy">Copy prompt</button>
+          <span class="sp"></span>
+          <span class="stat-line" id="rStat"></span>
+        </div>
+      </div>
+
+      <div id="rOut" hidden>
+        <div class="card">
+          <div class="scorebox">
+            <span class="scorenum" id="rScore">0%</span>
+            <span class="scoremeta" id="rMeta"></span>
+          </div>
+          <div class="meter"><i id="rMeter" style="width:0"></i></div>
+          <div style="margin-top:30px">
+            <span class="mono">You can evidence this</span>
+            <div class="chips" id="rHits"></div>
+          </div>
+          <div style="margin-top:28px">
+            <span class="mono">Gaps to address</span>
+            <div class="chips" id="rGaps"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Lead with these</h3>
+          <p class="card-note">Ranked by overlap with this posting. Put them in this order on the page.</p>
+          <div id="rPicks"></div>
+        </div>
+      </div>
+
+      <div class="card" id="rDraftCard" hidden>
+        <h3>Tailored draft</h3>
+        <p class="card-note">Check every line against what you actually did before this goes out.</p>
+        <pre id="rDraft" style="white-space:pre-wrap;font-family:var(--f-sans);font-size:15.5px;line-height:1.7;margin:22px 0 0"></pre>
+      </div>
+    </div>
+
+    <!-- ---------- INTERVIEW BRIEFS ---------- -->
+    <div class="panel" data-panel="prep" role="tabpanel" hidden>
+      <div class="card on-white no-print">
+        <h3>Interview briefs</h3>
+        <p class="card-note">Eight STAR stories built from your bank and shaped for this specific employer.</p>
+        <div class="g2" style="margin-top:24px">
+          <div class="field" style="margin-top:0">
+            <label for="pCo">Company</label>
+            <input type="text" id="pCo" class="inp" placeholder="e.g. Johnson &amp; Johnson" />
+          </div>
+          <div class="field" style="margin-top:0">
+            <label for="pRole">Role title</label>
+            <input type="text" id="pRole" class="inp" placeholder="e.g. Information Security Analyst I" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="pJD">Job description</label>
+          <textarea id="pJD" class="tall" placeholder="Paste the full posting, including the about-us section."></textarea>
+        </div>
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:11px;font-weight:500;cursor:pointer;font-size:15.5px">
+            <input type="checkbox" id="pResearch" checked style="width:17px;height:17px;accent-color:#17181A" />
+            Research the company on the web first
+          </label>
+          <p class="hint">Slower, and worth it — this is what lets the briefs mirror how this employer actually talks.</p>
+        </div>
+        <div class="bar">
+          <button class="btn btn-dark" id="pGen">Generate 8 briefs</button>
+          <button class="btn btn-white" id="pCopy">Copy prompt instead</button>
+          <span class="sp"></span>
+          <span class="stat-line" id="pStat"></span>
+        </div>
+        <div class="note note-clay">
+          <b>No API key?</b> Copy prompt gives you the whole thing — your experience bank, the posting and
+          the instructions — ready to paste into any chat assistant. Same output, zero cost.
+        </div>
+      </div>
+
+      <div class="bar no-print" id="pTools" hidden>
+        <button class="btn btn-white btn-sm" id="pPrint">Print study sheet</button>
+        <button class="btn btn-white btn-sm" id="pClear">Clear briefs</button>
+      </div>
+
+      <div id="pOut"></div>
+    </div>
+
+    <!-- ---------- EXPERIENCE BANK ---------- -->
+    <div class="panel" data-panel="bank" role="tabpanel" hidden>
+      <div class="card on-white">
+        <h3>Experience bank</h3>
+        <p class="card-note">
+          The only material any output is allowed to draw from. Write plainly — rough honest detail
+          produces better stories than polished summary. Edits save as you type.
+        </p>
+        <div class="note note-amber">
+          <b>Worth doing today:</b> add the things that went wrong. A real mistake with a real fix is the
+          hardest story to produce on the spot and the one interviewers weigh most heavily.
+        </div>
+        <div id="expList" style="margin-top:22px"></div>
+        <div class="bar">
+          <button class="btn btn-dark btn-sm" id="expAdd">Add entry</button>
+          <button class="btn btn-white btn-sm" id="expExport">Export JSON</button>
+          <span class="sp"></span>
+          <span class="stat-line" id="expCount"></span>
+          <button class="btn btn-white btn-sm" id="expReset">Restore defaults</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- SETTINGS ---------- -->
+    <div class="panel" data-panel="set" role="tabpanel" hidden>
+      <div class="card on-white">
+        <h3>API key</h3>
+        <p class="card-note">Optional. Without one, use the Copy prompt buttons instead — everything else still works.</p>
+        <div class="note note-amber">
+          <b>Read this before pasting a key.</b> It is stored in this browser's local storage and sent
+          straight to Anthropic from this page. That is fine for a personal tool on your own machine.
+          It is not fine on a shared computer. Never commit a key to the repo, and set a spend cap on it
+          in the Anthropic console.
+        </div>
+        <div class="field">
+          <label for="apiKey">Anthropic API key</label>
+          <input type="password" id="apiKey" class="inp" placeholder="sk-ant-…" autocomplete="off" />
+          <p class="hint">Cleared from this box once saved.</p>
+        </div>
+        <div class="field">
+          <label for="modelSel">Model</label>
+          <select id="modelSel" class="inp">
+            <option value="claude-sonnet-5">Claude Sonnet 5 — balanced, good default</option>
+            <option value="claude-opus-5">Claude Opus 5 — strongest, slower</option>
+            <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 — fastest, cheapest</option>
+          </select>
+        </div>
+        <div class="bar">
+          <button class="btn btn-dark" id="saveKey">Save key</button>
+          <button class="btn btn-white" id="clearKey">Remove key</button>
+          <span class="sp"></span>
+          <span class="stat-line" id="sStat"></span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Stored data</h3>
+        <p class="card-note">Everything this site keeps lives in this browser: your key, your bank edits, your last briefs.</p>
+        <div class="bar"><button class="btn btn-white btn-sm" id="wipe">Erase all local data</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot no-print">
+  <div class="wrap foot-in">
+    <p>Career Lab — built by Fahim Abrar. Single file, static host, no backend, no tracking.</p>
+    <p>&copy; <span id="yr"></span> · <a href="https://fahimabrar.me">fahimabrar.me</a></p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   DATA — your raw material. Edit DEFAULT_EXPERIENCE freely.
+   Anything you add here is the ONLY material the generators
+   are allowed to build from.
+   ============================================================ */
+const PROFILE = {
+  name: "Fahim Abrar",
+  headline: "Information Security Analyst — B.S. Computing & Informatics, cybersecurity minor (Dec 2026)",
+  skills: ["Tenable Nessus","Splunk","Microsoft Sentinel","Metasploit","Nmap","Wireshark","NetScaler",
+    "ServiceNow","Python","SQL","Bash","Linux","Active Directory","Azure","API integration","IDS/IPS",
+    "Firewalls","Vulnerability management","Threat detection","Threat hunting","Incident response",
+    "Security automation","Risk assessment","Log analysis","Penetration testing","NIST CSF",
+    "CIS Benchmarks","ISO 27001","PCI DSS","HIPAA","GDPR","SOX"]
+};
+
+const DEFAULT_EXPERIENCE = [
+  { id:"irt-kev", title:"Rowan IRT — KEV-driven vulnerability prioritization",
+    body:`Information Security Analyst, Rowan University IRT Information Security Office (Apr 2025 – present, ~1.5 yrs).
+Nessus scans returned far more findings than the team could remediate, and severity scores alone were a poor guide to what actually mattered. I began cross-referencing scan output against CISA's Known Exploited Vulnerabilities catalog so vulnerabilities under active exploitation escalated first, regardless of raw CVSS. This changed what got patched in which order and gave system owners a defensible reason for the sequence.` },
+  { id:"irt-automation", title:"Rowan IRT — Python automation for vulnerability matching and reporting",
+    body:`Analyst reporting was manual: pulling scan data, matching findings to assets and owners, assembling remediation reports by hand each cycle.
+I wrote Python tooling to automate the matching and report generation. It cut analyst reporting time by roughly 75% and made reports consistent between cycles. I had to work out the data model, handle messy and incomplete asset records, and get the team to trust the output.` },
+  { id:"vuln-dashboard", title:"Vulnerability Dashboard project",
+    body:`Built a dashboard ingesting CVE/CVSS data with KEV status layered on top to drive prioritization, producing remediation reports for system owners.
+Design decisions: what to surface first, how to make severity legible to non-security staff, how to avoid alert fatigue.` },
+  { id:"phishing-tools", title:"Phishing & threat detection tooling",
+    body:`Python tools analyzing URLs for threat indicators via external APIs and checking credentials against breach intelligence sources. Built for real use during security operations rather than as a class exercise — API rate limits, inconsistent responses and false positives were the actual problems.` },
+  { id:"breach-analyzer", title:"Password Breach Analyzer",
+    body:`Python tool built for Rowan IRT security operations to identify credentials appearing in known breach data, so exposed accounts could be flagged and reset proactively.` },
+  { id:"cmu-fellowship", title:"CMU Heinz — Summer Cybersecurity Fellowship research team",
+    body:`Undergraduate Cybersecurity Research Fellow, Carnegie Mellon Heinz College (Jun–Aug 2026). Five-person research team advised by Brett Tucker, studying how AI can strengthen cyber defense.
+Team dynamics, scoping a research question five people could execute in a summer, and dividing the work were as much of the challenge as the technical content.` },
+  { id:"soc-triage", title:"AI-assisted SOC triage system design",
+    body:`Designed an AI-assisted SOC triage concept covering Darktrace, Microsoft Sentinel and Radiant Security, presented for a Human/AI Interaction course. The central question was where a human analyst must stay in the loop and where automation is safe — what happens when the model is confidently wrong about an alert.` },
+  { id:"beth-anomaly", title:"Anomaly detection on the BETH dataset",
+    body:`Anomaly detection work using the BETH cybersecurity dataset — host-level kernel process and network data. Dealt with heavy class imbalance (very few malicious samples) and deciding what a useful detection threshold looks like when false positives cost analyst hours.` },
+  { id:"org-secretary", title:"Secretary — 100+ member Rowan student organization",
+    body:`Secretary since Sept 2024 for a student organization of 100+ members. Led outreach and a digital rebranding effort; event attendance rose about 40%.
+The rebrand meant persuading other officers to change something they were attached to, plus the unglamorous coordination work nobody had volunteered for.` },
+  { id:"academics", title:"Academic record",
+    body:`Rowan University, B.S. Computing & Informatics with a cybersecurity minor, graduating Dec 2026. 3.8 GPA. President's List three semesters, Dean's List three semesters. Carried web development coursework alongside the CMU fellowship and the IRT analyst role.` }
+];
+
+const CATEGORIES = [
+  { name:"The Complex Problem", brief:"A technical challenge — a messy dataset, a failing model, an unworkable process — and the reasoning used to get through it. Tests decomposition, not tool knowledge." },
+  { name:"The Conflict", brief:"A disagreement with a teammate or stakeholder. Tests emotional intelligence and negotiation. Must resolve without blaming the other person." },
+  { name:"The Failure / Mistake", brief:"Something that genuinely went wrong, owned plainly, with the fix and the lesson. Tests humility. A disguised humblebrag reads as evasion." },
+  { name:"The Leadership / Initiative", brief:"Stepping up without being asked or titled. Tests whether you act on gaps you notice." },
+  { name:"The Adaptability", brief:"Scope changed mid-stream and you re-planned. Tests composure and judgment when the ground moves." },
+  { name:"The Data-to-Value", brief:"Translating a technical insight for a non-technical audience so a decision could be made. Tests communication and commercial awareness." },
+  { name:"The Tight Deadline", brief:"How you triage under pressure. Tests prioritization method — what you cut and how you decided." },
+  { name:"The Success / Pride", brief:"Your greatest hit: the work with the most impact. Tests what you consider valuable and whether you can quantify it." }
+];
+
+const TAXONOMY = [
+  {t:"SIEM",a:["siem","security information and event management"]},
+  {t:"Splunk",a:["splunk","spl"]},
+  {t:"Microsoft Sentinel",a:["sentinel","azure sentinel","microsoft sentinel","kql"]},
+  {t:"CrowdStrike",a:["crowdstrike","falcon"]},
+  {t:"EDR/XDR",a:["edr","xdr","endpoint detection"]},
+  {t:"Tenable Nessus",a:["nessus","tenable"]},
+  {t:"Qualys",a:["qualys"]},
+  {t:"Rapid7",a:["rapid7","insightvm","nexpose"]},
+  {t:"Metasploit",a:["metasploit"]},
+  {t:"Burp Suite",a:["burp","burpsuite"]},
+  {t:"Nmap",a:["nmap"]},
+  {t:"Wireshark",a:["wireshark","packet capture","pcap"]},
+  {t:"ServiceNow",a:["servicenow"]},
+  {t:"Jira",a:["jira"]},
+  {t:"SOAR",a:["soar","security orchestration"]},
+  {t:"Python",a:["python"]},
+  {t:"SQL",a:["sql","relational database"]},
+  {t:"Bash/Shell",a:["bash","shell scripting","powershell","shell"]},
+  {t:"Linux",a:["linux","unix","rhel","ubuntu"]},
+  {t:"Windows Server",a:["windows server","windows administration"]},
+  {t:"Active Directory",a:["active directory","ad","entra","azure ad","ldap"]},
+  {t:"Azure",a:["azure","microsoft cloud"]},
+  {t:"AWS",a:["aws","amazon web services","ec2","s3"]},
+  {t:"GCP",a:["gcp","google cloud"]},
+  {t:"Networking",a:["tcp/ip","networking","dns","dhcp","routing","vlan"]},
+  {t:"Firewalls",a:["firewall","palo alto","fortinet","asa"]},
+  {t:"IDS/IPS",a:["ids","ips","intrusion detection","intrusion prevention","snort","suricata"]},
+  {t:"Vulnerability management",a:["vulnerability management","vulnerability assessment","patch management","remediation","cve","cvss","kev"]},
+  {t:"Threat detection",a:["threat detection","detection engineering","use case development"]},
+  {t:"Threat hunting",a:["threat hunting","hunt team"]},
+  {t:"Threat intelligence",a:["threat intelligence","cti","ioc","indicators of compromise"]},
+  {t:"Incident response",a:["incident response","ir","containment","eradication","csirt","incident handling"]},
+  {t:"Digital forensics",a:["forensics","dfir","memory analysis","disk image"]},
+  {t:"Malware analysis",a:["malware analysis","reverse engineering","sandboxing"]},
+  {t:"Penetration testing",a:["penetration testing","pentest","red team","offensive security"]},
+  {t:"Phishing analysis",a:["phishing","email security","business email compromise","bec"]},
+  {t:"Log analysis",a:["log analysis","log review","correlation rules"]},
+  {t:"Security automation",a:["automation","scripting","orchestration","automate"]},
+  {t:"Risk assessment",a:["risk assessment","risk management","risk register","third party risk"]},
+  {t:"IAM",a:["identity and access","iam","least privilege","access review","provisioning","mfa","sso"]},
+  {t:"Cloud security",a:["cloud security","cspm","container security","kubernetes"]},
+  {t:"Data loss prevention",a:["dlp","data loss prevention"]},
+  {t:"MITRE ATT&CK",a:["mitre","att&ck","attack framework"]},
+  {t:"NIST",a:["nist","800-53","800-171","csf","rmf"]},
+  {t:"CIS Benchmarks",a:["cis benchmark","cis control","hardening"]},
+  {t:"ISO 27001",a:["iso 27001","iso27001","isms"]},
+  {t:"PCI DSS",a:["pci","pci-dss","pci dss"]},
+  {t:"HIPAA",a:["hipaa","phi"]},
+  {t:"GDPR",a:["gdpr","data privacy"]},
+  {t:"SOX",a:["sox","sarbanes"]},
+  {t:"FedRAMP",a:["fedramp","fisma"]},
+  {t:"Compliance & audit",a:["compliance","audit","control testing","evidence collection"]},
+  {t:"Security awareness",a:["security awareness","user training","phishing simulation"]},
+  {t:"Documentation",a:["documentation","runbook","playbook","sop","standard operating"]},
+  {t:"Stakeholder communication",a:["stakeholder","communicate","communication","presentation","presented","non-technical","cross-functional","business partner","briefing"]},
+  {t:"Ticket triage",a:["triage","ticket","queue","escalation","tier 1","tier 2","soc analyst"]},
+  {t:"On-call / shift work",a:["on-call","on call","shift","24/7","rotation"]},
+  {t:"Machine learning",a:["machine learning","ml","anomaly detection","model","ai/ml"]},
+  {t:"Data analysis",a:["data analysis","dashboard","metrics","reporting","kpi","visualization"]},
+  {t:"Security+",a:["security+","sec+","comptia security"]},
+  {t:"CISSP",a:["cissp"]},
+  {t:"CEH",a:["ceh","certified ethical hacker"]},
+  {t:"GIAC",a:["giac","gcih","gsec","gcia"]},
+  {t:"CySA+",a:["cysa","cybersecurity analyst+"]},
+  {t:"Clearance",a:["security clearance","clearance","public trust","ts/sci","secret clearance"]}
+];
+
+/* ============================================================
+   APP
+   ============================================================ */
+const LS={key:"cl.key",model:"cl.model",exp:"cl.exp",jd:"cl.jd",co:"cl.co",role:"cl.role",out:"cl.out"};
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const store={
+  get(k,f){try{const v=localStorage.getItem(k);return v===null?f:JSON.parse(v)}catch{return f}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}},
+  del(k){try{localStorage.removeItem(k)}catch{}}
+};
+let EXP = store.get(LS.exp, DEFAULT_EXPERIENCE);
+let BRIEFS = store.get(LS.out, null);
+
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* --- word-boundary matching (substring search gives false hits:
+   "phi" inside "phishing", "cti" inside "activities") --- */
+const RX = TAXONOMY.map(e=>({
+  t:e.t,
+  p:e.a.map(a=>new RegExp("(^|[^a-zA-Z0-9])"+a.trim().replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"([^a-zA-Z0-9]|$)","i"))
+}));
+function terms(text){
+  const hay=" "+String(text).replace(/[\n\r]+/g," ")+" ";
+  return RX.filter(e=>e.p.some(rx=>rx.test(hay))).map(e=>e.t);
+}
+const corpus=()=>[PROFILE.headline,PROFILE.skills.join(" "),EXP.map(e=>e.title+" "+e.body).join(" ")].join(" ");
+function analyze(jd){
+  const jt=terms(jd), mine=new Set(terms(corpus()));
+  const hits=jt.filter(t=>mine.has(t)), gaps=jt.filter(t=>!mine.has(t));
+  return {jt,hits,gaps,score:jt.length?Math.round(hits.length/jt.length*100):0};
+}
+function ranked(jd){
+  const jt=new Set(terms(jd));
+  return EXP.map(e=>{
+    const ov=[...new Set(terms(e.title+" "+e.body))].filter(t=>jt.has(t));
+    return {...e,ov,w:ov.length};
+  }).sort((a,b)=>b.w-a.w);
+}
+function chips(el,list,cls){
+  el.innerHTML = list.length ? list.map(t=>`<span class="chip ${cls}">${esc(t)}</span>`).join("")
+                             : `<span class="chip chip-nil">none detected</span>`;
+}
+function stat(el,msg,kind){
+  el.className="stat-line"+(kind==="err"?" err":kind==="ok"?" ok":"");
+  el.innerHTML=(kind==="load"?'<span class="spin"></span>':"")+esc(msg);
+}
+async function copyText(text,el,msg){
+  try{await navigator.clipboard.writeText(text)}
+  catch{const t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove()}
+  stat(el,msg,"ok");
+}
+
+/* ---------- tabs ---------- */
+function switchTo(name){
+  $$(".sw").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.tab===name)));
+  $$(".panel").forEach(p=>{p.hidden=p.dataset.panel!==name});
+}
+
+/* ---------- prompts ---------- */
+function storyPrompt({jd,company,role,research}){
+  const bank=EXP.map(e=>`### ${e.title}\n${e.body}`).join("\n\n");
+  const cats=CATEGORIES.map((c,i)=>`${i+1}. ${c.name} — ${c.brief}`).join("\n");
+  return `You are preparing a candidate for a behavioral interview. Shape their REAL experience into eight STAR stories. You are not writing fiction.
+
+## Absolute constraint
+Every story must be traceable to the experience bank below. You may reframe, select detail and sharpen language. You may NOT invent employers, projects, metrics, technologies, timelines or outcomes that are not in the bank. If the bank has no honest material for a category, say so in the "gap" field and write the closest legitimate story from what IS there — do not fabricate to fill the slot. A fabricated story collapses under one follow-up question and costs the candidate the offer.
+
+## Candidate
+${PROFILE.name} — ${PROFILE.headline}
+
+## Experience bank (only permitted source material)
+${bank}
+
+## Target role
+Company: ${company||"(not specified)"}
+Role: ${role||"(not specified)"}
+
+Job description:
+"""
+${jd}
+"""
+${research?`
+## Research step
+Before writing, search the web for this company and role. Find what the organization actually does, its security posture or recent public incidents, its stated values or engineering culture, and anything in recent news a prepared candidate would be expected to know. Use it to choose WHICH real experiences to lead with and which vocabulary to mirror — never to invent experience.`:""}
+
+## The eight stories
+${cats}
+
+## How to write each
+- Situation: two sentences of concrete context.
+- Task: what the candidate was responsible for. First person.
+- Action: the heart of it. 3-5 sentences on what they personally did and WHY they chose that approach over alternatives. Interviewers probe reasoning, not steps.
+- Result: what changed. Use real numbers from the bank where they exist; otherwise describe the concrete outcome rather than inventing a figure.
+- Spoken length 90-120 seconds. Write it how someone talks, not how a resume reads.
+- No buzzword padding. Plain, confident, specific.
+
+## Output format
+Return ONLY valid JSON. No markdown fences, no preamble.
+
+{
+  "research": {
+    "summary": "3-4 sentences on the company and what they'll care about. Empty string if no research performed.",
+    "talkingPoints": ["3-5 specific things worth referencing in the room"],
+    "askThem": ["3 sharp questions the candidate should ask the interviewer"]
+  },
+  "stories": [
+    {
+      "category": "The Complex Problem",
+      "title": "Short memorable name, 3-7 words",
+      "situation": "...", "task": "...", "action": "...", "result": "...",
+      "sources": ["exact title(s) from the experience bank this draws on"],
+      "followUps": ["2-3 follow-up questions an interviewer will likely ask next"],
+      "gap": "Empty string if the bank fully supports this. Otherwise one sentence naming what real experience would make it stronger."
+    }
+  ]
+}
+
+"stories" must contain exactly 8 objects in the category order listed above.`;
+}
+
+function resumePrompt(jd){
+  const r=ranked(jd), a=analyze(jd);
+  return `Tailor a resume to the job description below WITHOUT inventing anything.
+
+## Candidate
+${PROFILE.name} — ${PROFILE.headline}
+
+## Experience bank (only permitted source)
+${r.map(e=>`### ${e.title}\n${e.body}`).join("\n\n")}
+
+## Job description
+"""
+${jd}
+"""
+
+## Detected requirements
+Evidenced by current material: ${a.hits.join(", ")||"none"}
+Not evidenced: ${a.gaps.join(", ")||"none"}
+
+## Produce
+1. A skills line reordered to lead with what this posting asks for — only skills the candidate genuinely has.
+2. For each relevant entry, 3-4 resume bullets rewritten in the posting's vocabulary. Strong verb first, real metric where one exists. Never add a metric that isn't in the bank.
+3. A two-sentence professional summary for this specific role.
+4. An honest gap list: requirements the candidate cannot evidence, and the cheapest legitimate way to close each one.
+
+Keep every claim traceable to the bank. Flag anything uncertain rather than smoothing it over.`;
+}
+
+/* ---------- API ---------- */
+async function callClaude(prompt,{research,onStatus}={}){
+  const key=store.get(LS.key,"");
+  if(!key) throw new Error("No API key saved. Add one in Settings, or use Copy prompt.");
+  const model=store.get(LS.model,"claude-sonnet-5");
+  const body={model,max_tokens:8000,messages:[{role:"user",content:prompt}]};
+  if(research) body.tools=[{type:"web_search_20250305",name:"web_search",max_uses:6}];
+  onStatus?.(research?"Researching the company…":"Writing…");
+  const res=await fetch("https://api.anthropic.com/v1/messages",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","x-api-key":key,
+      "anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+    body:JSON.stringify(body)
+  });
+  if(!res.ok){
+    let d="";try{const j=await res.json();d=j?.error?.message||""}catch{}
+    if(res.status===401) throw new Error("Key rejected. Check it in Settings.");
+    if(res.status===429) throw new Error("Rate limited or out of credit. Wait and retry.");
+    throw new Error(`API error ${res.status}${d?": "+d:""}`);
+  }
+  const data=await res.json();
+  return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();
+}
+function parseJSON(raw){
+  let t=raw.replace(/```json/gi,"").replace(/```/g,"").trim();
+  const a=t.indexOf("{"),b=t.lastIndexOf("}");
+  if(a!==-1&&b!==-1) t=t.slice(a,b+1);
+  return JSON.parse(t);
+}
+
+/* ---------- experience bank ---------- */
+function renderExp(){
+  const host=$("#expList"); host.innerHTML="";
+  EXP.forEach((it,i)=>{
+    const d=document.createElement("div");
+    d.className="exp";
+    d.innerHTML=`<div class="exp-top">
+        <input class="exp-t" value="${esc(it.title)}" aria-label="Entry title" />
+        <button class="x" aria-label="Remove entry" title="Remove">&times;</button>
+      </div>
+      <textarea class="exp-b" aria-label="Entry detail">${esc(it.body)}</textarea>`;
+    d.querySelector(".exp-t").addEventListener("input",e=>{EXP[i].title=e.target.value;store.set(LS.exp,EXP)});
+    d.querySelector(".exp-b").addEventListener("input",e=>{EXP[i].body=e.target.value;store.set(LS.exp,EXP)});
+    d.querySelector(".x").addEventListener("click",()=>{EXP.splice(i,1);store.set(LS.exp,EXP);renderExp()});
+    host.appendChild(d);
+  });
+  $("#expCount").textContent=`${EXP.length} entries`;
+}
+
+/* ---------- briefs ---------- */
+function renderBriefs(data){
+  const host=$("#pOut"); host.innerHTML="";
+  $("#pTools").hidden=false;
+  const r=data.research;
+  if(r&&(r.summary||r.talkingPoints?.length)){
+    const n=document.createElement("div");
+    n.className="rnote";
+    n.innerHTML=`<span class="mono">Before you walk in</span>
+      <h3>What this employer will care about</h3>
+      ${r.summary?`<p>${esc(r.summary)}</p>`:""}
+      ${r.talkingPoints?.length?`<ul>${r.talkingPoints.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}
+      ${r.askThem?.length?`<h4>Questions to ask them</h4><ul>${r.askThem.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}`;
+    host.appendChild(n);
+  }
+  const list=document.createElement("div"); list.className="briefs";
+  (data.stories||[]).forEach((s,i)=>{
+    const row=(L,label,v)=>v?`<div class="srow"><div class="skey"><b>${L}</b><span>${label}</span></div><div class="sval">${esc(v)}</div></div>`:"";
+    const el=document.createElement("article");
+    el.className="brief";
+    el.innerHTML=`<header class="brief-h">
+        <span class="brief-n">/ ${String(i+1).padStart(2,"0")}</span>
+        <div style="flex:1;min-width:0">
+          <div class="cat">${esc(s.category||"")}</div>
+          <h4>${esc(s.title||"Untitled")}</h4>
+        </div>
+      </header>
+      <div>${row("S","Situation",s.situation)}${row("T","Task",s.task)}${row("A","Action",s.action)}${row("R","Result",s.result)}</div>
+      ${s.gap?`<div class="brief-flag"><b>Thin spot:</b> ${esc(s.gap)}</div>`:""}
+      <footer class="brief-f">
+        ${s.sources?.length?`<span class="mono">Drawn from</span><div class="src">${esc(s.sources.join("  ·  "))}</div>`:""}
+        ${s.followUps?.length?`<div style="margin-top:16px"><span class="mono">They will ask next</span>
+          <ul>${s.followUps.map(f=>`<li>${esc(f)}</li>`).join("")}</ul></div>`:""}
+      </footer>`;
+    list.appendChild(el);
+  });
+  host.appendChild(list);
+}
+
+/* ---------- boot ---------- */
+document.addEventListener("DOMContentLoaded",()=>{
+  $("#yr").textContent=new Date().getFullYear();
+  $$(".sw").forEach(b=>b.addEventListener("click",()=>switchTo(b.dataset.tab)));
+  renderExp();
+  if(BRIEFS) renderBriefs(BRIEFS);
+
+  const rJD=$("#rJD"), pJD=$("#pJD");
+  rJD.value=store.get(LS.jd,""); pJD.value=store.get(LS.jd,"");
+  $("#pCo").value=store.get(LS.co,""); $("#pRole").value=store.get(LS.role,"");
+  rJD.addEventListener("input",()=>{store.set(LS.jd,rJD.value);pJD.value=rJD.value});
+  pJD.addEventListener("input",()=>{store.set(LS.jd,pJD.value);rJD.value=pJD.value});
+  $("#pCo").addEventListener("input",e=>store.set(LS.co,e.target.value));
+  $("#pRole").addEventListener("input",e=>store.set(LS.role,e.target.value));
+
+  /* ATS match */
+  $("#rScan").addEventListener("click",()=>{
+    const t=rJD.value.trim();
+    if(t.length<60){stat($("#rStat"),"Paste the job description first.","err");return}
+    const a=analyze(t), rk=ranked(t).filter(e=>e.w>0);
+    $("#rOut").hidden=false;
+    $("#rScore").textContent=a.score+"%";
+    $("#rMeter").style.width=a.score+"%";
+    $("#rMeta").textContent=`${a.hits.length} of ${a.jt.length} detected requirements evidenced by your material`;
+    chips($("#rHits"),a.hits,"chip-hit"); chips($("#rGaps"),a.gaps,"chip-gap");
+    $("#rPicks").innerHTML = rk.length ? rk.map((e,i)=>
+      `<div class="pick"><span class="r">/ ${String(i+1).padStart(2,"0")}</span>
+        <div><b>${esc(e.title)}</b><div class="chips">${e.ov.map(t=>`<span class="chip chip-hit">${esc(t)}</span>`).join("")}</div></div>
+      </div>`).join("")
+      : `<p class="card-note">No overlap detected. Either this posting is outside your current material, or the taxonomy needs new terms.</p>`;
+    stat($("#rStat"),"Scan complete.","ok");
+  });
+  $("#rCopy").addEventListener("click",()=>{
+    const t=rJD.value.trim();
+    if(t.length<60){stat($("#rStat"),"Paste the job description first.","err");return}
+    copyText(resumePrompt(t),$("#rStat"),"Prompt copied.");
+  });
+  $("#rGen").addEventListener("click",async()=>{
+    const t=rJD.value.trim();
+    if(t.length<60){stat($("#rStat"),"Paste the job description first.","err");return}
+    const b=$("#rGen"); b.disabled=true; stat($("#rStat"),"Writing…","load");
+    try{
+      const out=await callClaude(resumePrompt(t));
+      $("#rDraftCard").hidden=false; $("#rDraft").textContent=out;
+      stat($("#rStat"),"Draft ready.","ok");
+    }catch(e){stat($("#rStat"),e.message,"err")}finally{b.disabled=false}
+  });
+
+  /* briefs */
+  const needJD=()=>{
+    if(pJD.value.trim().length<60){stat($("#pStat"),"Paste the job description first.","err");return false}
+    return true;
+  };
+  $("#pCopy").addEventListener("click",()=>{
+    if(!needJD())return;
+    copyText(storyPrompt({jd:pJD.value.trim(),company:$("#pCo").value.trim(),role:$("#pRole").value.trim(),research:$("#pResearch").checked}),$("#pStat"),"Prompt copied — paste it into any assistant.");
+  });
+  $("#pGen").addEventListener("click",async()=>{
+    if(!needJD())return;
+    const b=$("#pGen"); b.disabled=true; stat($("#pStat"),"Starting…","load");
+    try{
+      const research=$("#pResearch").checked;
+      const raw=await callClaude(
+        storyPrompt({jd:pJD.value.trim(),company:$("#pCo").value.trim(),role:$("#pRole").value.trim(),research}),
+        {research,onStatus:m=>stat($("#pStat"),m,"load")});
+      const p=parseJSON(raw);
+      if(!p.stories?.length) throw new Error("Response came back without stories. Try again.");
+      BRIEFS=p; store.set(LS.out,p); renderBriefs(p);
+      stat($("#pStat"),`${p.stories.length} briefs ready.`,"ok");
+      $("#pOut").scrollIntoView({behavior:"smooth",block:"start"});
+    }catch(e){stat($("#pStat"),e.message,"err")}finally{b.disabled=false}
+  });
+  $("#pPrint").addEventListener("click",()=>window.print());
+  $("#pClear").addEventListener("click",()=>{
+    if(!confirm("Clear the generated briefs?"))return;
+    BRIEFS=null; store.del(LS.out); $("#pOut").innerHTML=""; $("#pTools").hidden=true;
+  });
+
+  /* bank */
+  $("#expAdd").addEventListener("click",()=>{
+    EXP.push({id:"c"+Date.now(),title:"New entry",body:""}); store.set(LS.exp,EXP); renderExp();
+    $$("#expList .exp").pop()?.querySelector(".exp-t")?.focus();
+  });
+  $("#expReset").addEventListener("click",()=>{
+    if(!confirm("Restore the starting entries? Your edits will be lost."))return;
+    EXP=JSON.parse(JSON.stringify(DEFAULT_EXPERIENCE)); store.set(LS.exp,EXP); renderExp();
+  });
+  $("#expExport").addEventListener("click",()=>{
+    const blob=new Blob([JSON.stringify(EXP,null,2)],{type:"application/json"});
+    const u=URL.createObjectURL(blob), a=document.createElement("a");
+    a.href=u; a.download="experience-bank.json"; a.click(); URL.revokeObjectURL(u);
+  });
+
+  /* settings */
+  const k=$("#apiKey");
+  if(store.get(LS.key,"")) k.placeholder="••••••••••••••••••••  (saved)";
+  $("#modelSel").value=store.get(LS.model,"claude-sonnet-5");
+  $("#saveKey").addEventListener("click",()=>{
+    const v=k.value.trim();
+    if(!v){stat($("#sStat"),"Paste a key first.","err");return}
+    store.set(LS.key,v); k.value=""; k.placeholder="••••••••••••••••••••  (saved)";
+    stat($("#sStat"),"Key saved to this browser only.","ok");
+  });
+  $("#clearKey").addEventListener("click",()=>{
+    store.del(LS.key); k.value=""; k.placeholder="sk-ant-…"; stat($("#sStat"),"Key removed.","ok");
+  });
+  $("#modelSel").addEventListener("change",e=>store.set(LS.model,e.target.value));
+  $("#wipe").addEventListener("click",()=>{
+    if(!confirm("Erase everything this site has stored in your browser?"))return;
+    Object.values(LS).forEach(store.del); location.reload();
+  });
+});
+</script>
+</body>
+</html>
