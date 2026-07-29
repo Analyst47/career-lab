@@ -647,7 +647,7 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
     <div class="panel" data-panel="set" role="tabpanel" hidden>
       <div class="card on-white">
         <h3>API key</h3>
-        <p class="card-note">Optional. Without one, use the Copy prompt buttons instead — everything else still works.</p>
+        <p class="card-note">The site works out of the box — no key, no account. The Settings below are only if you'd rather use your own provider key.</p>
         <div class="note note-amber">
           <b>Read this before pasting a key.</b> It is stored in this browser's local storage and sent
           straight to the provider you pick (Google, Groq or Anthropic) from this page. That is fine for a personal tool on your own machine.
@@ -656,9 +656,10 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
         <div class="field">
           <label for="provSel">Provider</label>
           <select id="provSel" class="inp">
-            <option value="gemini">Google Gemini — free tier, no card needed</option>
-            <option value="groq">Groq — free tier, fastest (Llama 3.3 70B)</option>
-            <option value="anthropic">Anthropic Claude — paid, strongest models</option>
+            <option value="hosted">Hosted — no key needed, works out of the box</option>
+            <option value="gemini">Google Gemini — bring your own key</option>
+            <option value="groq">Groq — bring your own key, fastest</option>
+            <option value="anthropic">Anthropic Claude — bring your own key</option>
           </select>
           <p class="hint" id="provHint"></p>
         </div>
@@ -1154,14 +1155,44 @@ async function refreshGeminiModels(){
     return true;
   }catch{return false}
 }
-const prov=()=>store.get(LS.prov,"gemini");
+const HOSTED_URL="https://careerlab-proxy.fahimspams.workers.dev";
+const HOSTED_MODEL="llama-3.3-70b-versatile";
+const prov=()=>store.get(LS.prov,"hosted");
 const keySlot=p=>p==="gemini"?LS.gkey:p==="groq"?LS.qkey:LS.key;
 const modelSlot=p=>p==="gemini"?LS.gmodel:p==="groq"?LS.qmodel:LS.model;
 const keyFor=p=>store.get(keySlot(p),"");
 const modelFor=p=>store.get(modelSlot(p),MODELS[p][0].v);
 
 async function callClaude(prompt,{research,onStatus,retried,forceModel,waited}={}){
-  const p=prov(), key=keyFor(p);
+  const p=prov();
+  if(p==="hosted"){
+    onStatus?.("Writing…");
+    const qm=forceModel||HOSTED_MODEL;
+    let res;
+    try{
+      res=await fetch(HOSTED_URL+"/v1/chat/completions",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({model:qm,max_tokens:8000,messages:[{role:"user",content:prompt}]})
+      });
+    }catch{ throw new Error("Can't reach the hosted service. Check your connection, or switch to your own key in Settings."); }
+    if(!res.ok){
+      let d="";try{const j=await res.json();d=j?.error?.message||j?.error||""}catch{}
+      if(res.status===403) throw new Error("This hosted service only runs on the official site. If you're self-hosting, add your own key in Settings.");
+      if(res.status===429){
+        if(!waited){ onStatus?.("Busy — retrying in a moment…"); await new Promise(r=>setTimeout(r,2500)); return callClaude(prompt,{research,onStatus,retried,forceModel,waited:true}); }
+        const alt="llama-3.1-8b-instant";
+        if(!forceModel&&qm!==alt){ onStatus?.("Still busy — trying a faster model…"); return callClaude(prompt,{research,onStatus,retried,forceModel:alt,waited:true}); }
+        throw new Error("The hosted service is at its rate limit right now. Wait a minute and retry, or add your own free key in Settings.");
+      }
+      throw new Error(`Hosted service error ${res.status}${d?": "+String(d).slice(0,140):""}`);
+    }
+    const data=await res.json();
+    const out=(data.choices?.[0]?.message?.content||"").trim();
+    if(!out) throw new Error("Empty response. Try again.");
+    return out;
+  }
+  const key=keyFor(p);
   if(!key) throw new Error(`No ${p==="gemini"?"Gemini":"Anthropic"} key saved. Add one in Settings, or use Copy prompt.`);
   onStatus?.(research?"Researching the company…":"Writing…");
   if(p==="gemini"){
@@ -1585,6 +1616,19 @@ document.addEventListener("DOMContentLoaded",()=>{
   function paintSettings(){
     const p=prov();
     $("#provSel").value=p;
+    const keyRow=k.closest(".field");
+    const modelRow=$("#modelSel").closest(".field");
+    const btnRow=$("#saveKey").closest(".bar");
+    if(p==="hosted"){
+      $("#provHint").textContent="Runs on the site's own hosted service. Nothing to set up — no key, no account, nothing stored. Prefer your own key? Pick another provider below.";
+      if(keyRow) keyRow.hidden=true;
+      if(modelRow) modelRow.hidden=true;
+      if(btnRow) btnRow.hidden=true;
+      return;
+    }
+    if(keyRow) keyRow.hidden=false;
+    if(modelRow) modelRow.hidden=false;
+    if(btnRow) btnRow.hidden=false;
     const hints={
       gemini:"Free key from aistudio.google.com/apikey — no card. Google may use free-tier prompts to improve its models.",
       groq:"Free key from console.groq.com — no card, roughly 1,000 requests/day on Llama 3.3 70B. Prompts may be used to improve models. No web research on this provider.",
