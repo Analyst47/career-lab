@@ -298,6 +298,7 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
       <a href="#work">Workspace</a>
       <a href="#work" onclick="switchTo('resume')">ATS match</a>
       <a href="#work" onclick="switchTo('prep')">Interview briefs</a>
+      <a href="#playbook">Playbook</a>
     </div>
     <a class="btn btn-dark btn-nav" href="#work">Open workspace</a>
   </div>
@@ -445,7 +446,7 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
     <div class="panel" data-panel="resume" role="tabpanel">
       <div class="card on-white">
         <h3>ATS match</h3>
-        <p class="card-note">The scan runs entirely in your browser and costs nothing. Drafting bullets needs a key.</p>
+        <p class="card-note">The flow: paste the posting &rarr; <b>Scan</b> (free, instant) &rarr; <b>Save to tracker</b> &rarr; <b>Draft tailored bullets</b> (uses your key). The score verdict tells you whether to apply as-is or tailor first — the Playbook below explains the bands.</p>
         <div class="field">
           <label for="rJD">Job description</label>
           <textarea id="rJD" class="tall" placeholder="Paste the full posting — responsibilities, requirements, qualifications."></textarea>
@@ -470,6 +471,7 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
           <div class="scorebox">
             <span class="scorenum" id="rScore">0%</span>
             <span class="scoremeta" id="rMeta"></span>
+            <span class="scoremeta" id="rVerdict" style="font-weight:700"></span>
           </div>
           <div class="meter"><i id="rMeter" style="width:0"></i></div>
           <div style="margin-top:30px">
@@ -494,10 +496,19 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
         </div>
       </div>
 
-      <div class="card" id="rDraftCard" hidden>
-        <h3>Tailored draft</h3>
-        <p class="card-note">Check every line against what you actually did before this goes out.</p>
-        <pre id="rDraft" style="white-space:pre-wrap;font-family:var(--f-sans);font-size:15.5px;line-height:1.7;margin:22px 0 0"></pre>
+      <div class="brief" id="rDraftCard" hidden style="margin-top:20px">
+        <header class="brief-h">
+          <span class="brief-n">READY</span>
+          <div style="flex:1;min-width:0">
+            <div class="cat">Tailored for this posting</div>
+            <h4>Resume draft</h4>
+          </div>
+          <button class="btn btn-white btn-sm" id="rCopyDraft" style="align-self:center;flex:none">Copy</button>
+        </header>
+        <div style="padding:26px 30px;background:var(--white)">
+          <p class="card-note" style="margin:0 0 18px">Clean plain text, ready to paste into your resume. Check every line against what you actually did before it goes out.</p>
+          <pre id="rDraft" style="white-space:pre-wrap;font-family:var(--f-sans);font-size:15px;line-height:1.75;margin:0"></pre>
+        </div>
       </div>
     </div>
 
@@ -505,7 +516,7 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
     <div class="panel" data-panel="prep" role="tabpanel" hidden>
       <div class="card on-white no-print">
         <h3>Interview briefs</h3>
-        <p class="card-note">Eight STAR stories built from your bank and shaped for this specific employer.</p>
+        <p class="card-note">The flow: company + role &rarr; paste the posting &rarr; <b>Generate</b>. Eight STAR stories built from your bank (or an uploaded resume), shaped for this employer — then hit <b>Rehearse</b> and say them out loud.</p>
         <div class="g2" style="margin-top:24px">
           <div class="field" style="margin-top:0">
             <label for="pCo">Company</label>
@@ -531,7 +542,7 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
             <input type="checkbox" id="pResearch" checked style="width:17px;height:17px;accent-color:#17181A" />
             Research the company on the web first
           </label>
-          <p class="hint">Slower, and worth it — this is what lets the briefs mirror how this employer actually talks.</p>
+          <p class="hint">Slower, and worth it — this is what lets the briefs mirror how this employer actually talks. Needs Gemini or Claude; Groq can't search the web, so it's skipped automatically there.</p>
         </div>
         <div class="bar">
           <button class="btn btn-dark" id="pGen">Generate 8 briefs</button>
@@ -575,7 +586,12 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
           <input type="text" id="ySkills" class="inp" placeholder="Splunk, Python, Nessus…" />
         </div>
         <div class="field">
-          <label for="yResume">Paste your resume</label>
+          <label for="bFile">Upload your resume</label>
+          <input type="file" id="bFile" accept=".pdf,.docx,.txt,.md" />
+          <p class="hint">PDF, DOCX or TXT — extracted in your browser into the box below, then hit Parse.</p>
+        </div>
+        <div class="field">
+          <label for="yResume">Or paste it</label>
           <textarea id="yResume" placeholder="Paste the plain text of your resume here."></textarea>
           <p class="hint">Parse into entries uses your saved API key (the free Gemini one works). No key? Add as one entry, then split it by hand.</p>
         </div>
@@ -634,13 +650,14 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
         <p class="card-note">Optional. Without one, use the Copy prompt buttons instead — everything else still works.</p>
         <div class="note note-amber">
           <b>Read this before pasting a key.</b> It is stored in this browser's local storage and sent
-          straight to the provider you pick (Google or Anthropic) from this page. That is fine for a personal tool on your own machine.
+          straight to the provider you pick (Google, Groq or Anthropic) from this page. That is fine for a personal tool on your own machine.
           It is not fine on a shared computer. Never commit a key to the repo; if it's a paid key, set a spend cap in the provider console.
         </div>
         <div class="field">
           <label for="provSel">Provider</label>
           <select id="provSel" class="inp">
             <option value="gemini">Google Gemini — free tier, no card needed</option>
+            <option value="groq">Groq — free tier, fastest (Llama 3.3 70B)</option>
             <option value="anthropic">Anthropic Claude — paid, strongest models</option>
           </select>
           <p class="hint" id="provHint"></p>
@@ -665,6 +682,61 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
         <h3>Stored data</h3>
         <p class="card-note">Everything this site keeps lives in this browser: your key, your bank edits, your last briefs.</p>
         <div class="bar"><button class="btn btn-white btn-sm" id="wipe">Erase all local data</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-cream2" id="playbook">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="mono">Playbook</span>
+      <h2 style="margin-top:16px">Get past the robot, then past the human</h2>
+    </div>
+    <p class="sec-lead">
+      The ATS is rarely what rejects you — a rushed human skimming a pile is. These eight moves
+      survive both. Every one of them is checkable with the tools above.
+    </p>
+    <div class="steps" style="margin-top:48px">
+      <div class="step">
+        <span class="n">/ 01</span>
+        <h3>Speak their exact words</h3>
+        <p>Keyword matching is literal. If the posting says "Microsoft Sentinel," write "Microsoft Sentinel" — not just "SIEM." The scanner above shows you exactly which words to mirror.</p>
+      </div>
+      <div class="step">
+        <span class="n">/ 02</span>
+        <h3>One column, no decoration</h3>
+        <p>Tables, text boxes, icons and two-column layouts scramble resume parsers. One column, standard fonts, .docx or a text-layer PDF. Boring formats get read; pretty ones get mangled.</p>
+      </div>
+      <div class="step">
+        <span class="n">/ 03</span>
+        <h3>Standard headers only</h3>
+        <p>Parsers key on "Experience," "Skills," "Education." A clever section name like "My Journey" makes your best work invisible to the software reading it first.</p>
+      </div>
+      <div class="step">
+        <span class="n">/ 04</span>
+        <h3>Verb, task, number</h3>
+        <p>Every bullet: strong verb + what you did + a measurable result. "Cut analyst reporting time 75% by automating vulnerability matching in Python" survives a six-second skim. Adjectives don't.</p>
+      </div>
+      <div class="step">
+        <span class="n">/ 05</span>
+        <h3>Win the top third</h3>
+        <p>Recruiters average about six seconds on the first pass, almost all of it above the fold. Your summary and your first role's bullets carry everything — tailor those hardest, per posting.</p>
+      </div>
+      <div class="step">
+        <span class="n">/ 06</span>
+        <h3>Only list what you can defend</h3>
+        <p>Every skill on the page is a future interview question. If you can't talk about it fluently for two minutes, it isn't a keyword — it's a trap you set for yourself.</p>
+      </div>
+      <div class="step">
+        <span class="n">/ 07</span>
+        <h3>Score, then decide</h3>
+        <p>70%+ match: apply today, as-is. 40–69%: close one or two gaps and tailor the top third first. Under 40%: it's a stretch — that hour is worth more spent on tip 08.</p>
+      </div>
+      <div class="step">
+        <span class="n">/ 08</span>
+        <h3>Referrals beat volume</h3>
+        <p>Most "ATS rejections" are humans skimming a pile. One message to a team member, professor or alum moves you off the pile entirely. Application plus referral is the play — not application times one hundred.</p>
       </div>
     </div>
   </div>
@@ -857,7 +929,7 @@ const TAXONOMY = [
 /* ============================================================
    APP
    ============================================================ */
-const LS={key:"cl.key",gkey:"cl.gkey",prov:"cl.prov",model:"cl.model",gmodel:"cl.gmodel",gmodels:"cl.gmodels",exp:"cl.exp",prof:"cl.prof",jobs:"cl.jobs",owner:"cl.owner",active:"cl.active",jd:"cl.jd",co:"cl.co",role:"cl.role",out:"cl.out"};
+const LS={key:"cl.key",gkey:"cl.gkey",prov:"cl.prov",model:"cl.model",gmodel:"cl.gmodel",gmodels:"cl.gmodels",qkey:"cl.qkey",qmodel:"cl.qmodel",qmodels:"cl.qmodels",exp:"cl.exp",prof:"cl.prof",jobs:"cl.jobs",owner:"cl.owner",active:"cl.active",jd:"cl.jd",co:"cl.co",role:"cl.role",out:"cl.out"};
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const store={
@@ -995,13 +1067,23 @@ ${jd}
 Evidenced by current material: ${a.hits.join(", ")||"none"}
 Not evidenced: ${a.gaps.join(", ")||"none"}
 
-## Produce
-1. A skills line reordered to lead with what this posting asks for — only skills the candidate genuinely has.
-2. For each relevant entry, 3-4 resume bullets rewritten in the posting's vocabulary. Strong verb first, real metric where one exists. Never add a metric that isn't in the bank.
-3. A two-sentence professional summary for this specific role.
-4. An honest gap list: requirements the candidate cannot evidence, and the cheapest legitimate way to close each one.
+## Output format — follow exactly
+Plain text only. NO markdown: no #, no *, no backticks, no tables. Bullets start with "• ". Section headers in CAPITALS on their own line. This text will be pasted directly into a resume, so it must read finished. Use exactly this layout:
 
-Keep every claim traceable to the bank. Flag anything uncertain rather than smoothing it over.`;
+SUMMARY
+Two sentences written for this specific role.
+
+SKILLS
+One comma-separated line (two grouped lines at most), leading with what this posting asks for, in the posting's own vocabulary — only skills the candidate genuinely has.
+
+EXPERIENCE
+Employer or project — Role (dates if known)
+• 3-4 bullets per relevant entry: strong verb first, the posting's vocabulary, the real metric where one exists. Never invent a metric.
+
+GAPS TO CLOSE
+• Each requirement the candidate cannot evidence, and the cheapest legitimate way to close it.
+
+Keep every claim traceable to the source material. Flag anything uncertain rather than smoothing it over.`;
 }
 
 function importPrompt(txt){
@@ -1029,8 +1111,29 @@ const MODELS={
     {v:"claude-sonnet-5",l:"Claude Sonnet 5 — balanced, good default"},
     {v:"claude-opus-5",l:"Claude Opus 5 — strongest, slower"},
     {v:"claude-haiku-4-5-20251001",l:"Claude Haiku 4.5 — fastest, cheapest"}],
-  get gemini(){return store.get(LS.gmodels,GEMINI_FALLBACK)}
+  get gemini(){return store.get(LS.gmodels,GEMINI_FALLBACK)},
+  get groq(){return store.get(LS.qmodels,GROQ_FALLBACK)}
 };
+const GROQ_FALLBACK=[
+  {v:"llama-3.3-70b-versatile",l:"Llama 3.3 70B — best free quality"},
+  {v:"llama-3.1-8b-instant",l:"Llama 3.1 8B — fastest"}];
+async function refreshGroqModels(){
+  const key=keyFor("groq"); if(!key) return false;
+  try{
+    const res=await fetch("https://api.groq.com/openai/v1/models",{headers:{"Authorization":"Bearer "+key}});
+    if(!res.ok) return false;
+    const data=await res.json();
+    const list=(data.data||[]).map(m=>String(m.id||""))
+      .filter(n=>n&&!/(whisper|tts|guard|embed|vision|audio)/i.test(n))
+      .sort()
+      .map(n=>({v:n,l:n}));
+    if(!list.length) return false;
+    list.sort((a,b)=>(b.v.includes("70b")?1:0)-(a.v.includes("70b")?1:0));
+    store.set(LS.qmodels,list);
+    if(!list.some(m=>m.v===store.get(LS.qmodel,""))) store.set(LS.qmodel,list[0].v);
+    return true;
+  }catch{return false}
+}
 /* Ask Google which models this key can use, so retirements never break the site. */
 async function refreshGeminiModels(){
   const key=keyFor("gemini"); if(!key) return false;
@@ -1052,23 +1155,39 @@ async function refreshGeminiModels(){
   }catch{return false}
 }
 const prov=()=>store.get(LS.prov,"gemini");
-const keyFor=p=>store.get(p==="gemini"?LS.gkey:LS.key,"");
-const modelFor=p=>store.get(p==="gemini"?LS.gmodel:LS.model,MODELS[p][0].v);
+const keySlot=p=>p==="gemini"?LS.gkey:p==="groq"?LS.qkey:LS.key;
+const modelSlot=p=>p==="gemini"?LS.gmodel:p==="groq"?LS.qmodel:LS.model;
+const keyFor=p=>store.get(keySlot(p),"");
+const modelFor=p=>store.get(modelSlot(p),MODELS[p][0].v);
 
-async function callClaude(prompt,{research,onStatus,retried}={}){
+async function callClaude(prompt,{research,onStatus,retried,forceModel,waited}={}){
   const p=prov(), key=keyFor(p);
   if(!key) throw new Error(`No ${p==="gemini"?"Gemini":"Anthropic"} key saved. Add one in Settings, or use Copy prompt.`);
   onStatus?.(research?"Researching the company…":"Writing…");
   if(p==="gemini"){
+    const gm=forceModel||modelFor("gemini");
     const body={contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:8192}};
     if(research) body.tools=[{google_search:{}}];
-    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelFor("gemini")}:generateContent`,{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${gm}:generateContent`,{
       method:"POST",
       headers:{"Content-Type":"application/json","x-goog-api-key":key},
       body:JSON.stringify(body)
     });
     if(!res.ok){
       let d="";try{const j=await res.json();d=j?.error?.message||""}catch{}
+      if(res.status===503||res.status===529){
+        if(!waited){
+          onStatus?.("High demand — retrying in a moment…");
+          await new Promise(r=>setTimeout(r,2500));
+          return callClaude(prompt,{research,onStatus,retried,forceModel,waited:true});
+        }
+        const alt="gemini-3.5-flash-lite";
+        if(!forceModel&&gm!==alt){
+          onStatus?.("Still busy — trying "+alt+"…");
+          return callClaude(prompt,{research,onStatus,retried,forceModel:alt,waited:true});
+        }
+        throw new Error("Google's servers are overloaded right now. Wait a minute and retry, or switch provider to Anthropic in Settings.");
+      }
       if(res.status===404&&!retried&&await refreshGeminiModels()){
         return callClaude(prompt,{research,onStatus,retried:true});
       }
@@ -1082,6 +1201,40 @@ async function callClaude(prompt,{research,onStatus,retried}={}){
     if(!out) throw new Error("Gemini returned an empty response. Try again.");
     return out;
   }
+  if(p==="groq"){
+    const qm=forceModel||modelFor("groq");
+    const res=await fetch("https://api.groq.com/openai/v1/chat/completions",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","Authorization":"Bearer "+key},
+      body:JSON.stringify({model:qm,max_tokens:8000,messages:[{role:"user",content:prompt}]})
+    });
+    if(!res.ok){
+      let d="";try{const j=await res.json();d=j?.error?.message||""}catch{}
+      if(res.status===503||res.status===529){
+        if(!waited){
+          onStatus?.("High demand — retrying in a moment…");
+          await new Promise(r=>setTimeout(r,2500));
+          return callClaude(prompt,{research,onStatus,retried,forceModel,waited:true});
+        }
+        const alt="llama-3.1-8b-instant";
+        if(!forceModel&&qm!==alt){
+          onStatus?.("Still busy — trying "+alt+"…");
+          return callClaude(prompt,{research,onStatus,retried,forceModel:alt,waited:true});
+        }
+        throw new Error("Groq is overloaded right now. Wait a minute, or switch provider in Settings.");
+      }
+      if(res.status===404&&!retried&&await refreshGroqModels()){
+        return callClaude(prompt,{research,onStatus,retried:true});
+      }
+      if(res.status===401) throw new Error("Groq rejected the key — Groq keys start with gsk_. Check Settings.");
+      if(res.status===429) throw new Error("Groq free-tier rate limit hit. Wait a minute and retry.");
+      throw new Error(`Groq error ${res.status}${d?": "+d.slice(0,140):""}`);
+    }
+    const data=await res.json();
+    const out=(data.choices?.[0]?.message?.content||"").trim();
+    if(!out) throw new Error("Groq returned an empty response. Try again.");
+    return out;
+  }
   const body={model:modelFor("anthropic"),max_tokens:8000,messages:[{role:"user",content:prompt}]};
   if(research) body.tools=[{type:"web_search_20250305",name:"web_search",max_uses:6}];
   const res=await fetch("https://api.anthropic.com/v1/messages",{
@@ -1092,12 +1245,28 @@ async function callClaude(prompt,{research,onStatus,retried}={}){
   });
   if(!res.ok){
     let d="";try{const j=await res.json();d=j?.error?.message||""}catch{}
+    if((res.status===529||res.status===503)&&!waited){
+      onStatus?.("Servers busy — retrying in a moment…");
+      await new Promise(r=>setTimeout(r,2500));
+      return callClaude(prompt,{research,onStatus,retried,waited:true});
+    }
     if(res.status===401) throw new Error("Key rejected. Check it in Settings.");
     if(res.status===429) throw new Error("Rate limited or out of credit. Wait and retry.");
     throw new Error(`API error ${res.status}${d?": "+d:""}`);
   }
   const data=await res.json();
   return (data.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n").trim();
+}
+const stripMd=x=>String(x).replace(/\*\*(.+?)\*\*/g,"$1").replace(/^#{1,6}\s*/gm,"").replace(/`+/g,"");
+function cleanResume(t){
+  return String(t)
+    .replace(/^#{1,6}\s*/gm,"")
+    .replace(/\*\*(.+?)\*\*/g,"$1")
+    .replace(/(^|\s)\*(\S[^*]*)\*(?=\s|$)/g,"$1$2")
+    .replace(/`{1,3}/g,"")
+    .replace(/^\s*[-*·]\s+/gm,"• ")
+    .replace(/\n{3,}/g,"\n\n")
+    .trim();
 }
 function parseJSON(raw){
   let t=raw.replace(/```json/gi,"").replace(/```/g,"").trim();
@@ -1135,21 +1304,21 @@ function renderBriefs(data){
     n.className="rnote";
     n.innerHTML=`<span class="mono">Before you walk in</span>
       <h3>What this employer will care about</h3>
-      ${r.summary?`<p>${esc(r.summary)}</p>`:""}
+      ${r.summary?`<p>${esc(stripMd(r.summary))}</p>`:""}
       ${r.talkingPoints?.length?`<ul>${r.talkingPoints.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}
       ${r.askThem?.length?`<h4>Questions to ask them</h4><ul>${r.askThem.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}`;
     host.appendChild(n);
   }
   const list=document.createElement("div"); list.className="briefs";
   (data.stories||[]).forEach((s,i)=>{
-    const row=(L,label,v)=>v?`<div class="srow"><div class="skey"><b>${L}</b><span>${label}</span></div><div class="sval">${esc(v)}</div></div>`:"";
+    const row=(L,label,v)=>v?`<div class="srow"><div class="skey"><b>${L}</b><span>${label}</span></div><div class="sval">${esc(stripMd(v))}</div></div>`:"";
     const el=document.createElement("article");
     el.className="brief";
     el.innerHTML=`<header class="brief-h">
         <span class="brief-n">/ ${String(i+1).padStart(2,"0")}</span>
         <div style="flex:1;min-width:0">
           <div class="cat">${esc(s.category||"")}</div>
-          <h4>${esc(s.title||"Untitled")}</h4>
+          <h4>${esc(stripMd(s.title||"Untitled"))}</h4>
         </div>
       </header>
       <div>${row("S","Situation",s.situation)}${row("T","Task",s.task)}${row("A","Action",s.action)}${row("R","Result",s.result)}</div>
@@ -1288,6 +1457,12 @@ document.addEventListener("DOMContentLoaded",()=>{
     $("#rOut").hidden=false;
     $("#rScore").textContent=a.score+"%";
     $("#rMeter").style.width=a.score+"%";
+    const band=a.score>=70?["var(--green)","Strong match — apply now."]
+             :a.score>=40?["var(--amber)","Worth tailoring — close a gap or two first."]
+             :["var(--clay-2)","Stretch — spend the hour on a referral instead."];
+    $("#rMeter").style.background=band[0];
+    $("#rVerdict").textContent=band[1];
+    $("#rVerdict").style.color=band[0];
     $("#rMeta").textContent=`${a.hits.length} of ${a.jt.length} detected requirements evidenced by your material`;
     chips($("#rHits"),a.hits,"chip-hit"); chips($("#rGaps"),a.gaps,"chip-gap");
     $("#rPicks").innerHTML = OVERRIDE
@@ -1298,19 +1473,22 @@ document.addEventListener("DOMContentLoaded",()=>{
       </div>`).join("")
       : `<p class="card-note">No overlap detected. Either this posting is outside your current material, or the taxonomy needs new terms.</p>`;
     stat($("#rStat"),"Scan complete.","ok");
+    $("#rOut").scrollIntoView({behavior:"smooth",block:"start"});
   });
   $("#rCopy").addEventListener("click",()=>{
     const t=rJD.value.trim();
     if(t.length<60){stat($("#rStat"),"Paste the job description first.","err");return}
     copyText(resumePrompt(t),$("#rStat"),"Prompt copied.");
   });
+  $("#rCopyDraft").addEventListener("click",()=>copyText($("#rDraft").textContent,$("#rStat"),"Draft copied — paste it into your resume."));
   $("#rGen").addEventListener("click",async()=>{
     const t=rJD.value.trim();
     if(t.length<60){stat($("#rStat"),"Paste the job description first.","err");return}
     const b=$("#rGen"); b.disabled=true; stat($("#rStat"),"Writing…","load");
     try{
       const out=await callClaude(resumePrompt(t));
-      $("#rDraftCard").hidden=false; $("#rDraft").textContent=out;
+      $("#rDraftCard").hidden=false; $("#rDraft").textContent=cleanResume(out);
+      $("#rDraftCard").scrollIntoView({behavior:"smooth",block:"start"});
       stat($("#rStat"),"Draft ready.","ok");
     }catch(e){stat($("#rStat"),e.message,"err")}finally{b.disabled=false}
   });
@@ -1328,7 +1506,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     if(!needJD())return;
     const b=$("#pGen"); b.disabled=true; stat($("#pStat"),"Starting…","load");
     try{
-      const research=$("#pResearch").checked;
+      const research=$("#pResearch").checked&&prov()!=="groq";
       const raw=await callClaude(
         storyPrompt({jd:pJD.value.trim(),company:$("#pCo").value.trim(),role:$("#pRole").value.trim(),research}),
         {research,onStatus:m=>stat($("#pStat"),m,"load")});
@@ -1407,31 +1585,33 @@ document.addEventListener("DOMContentLoaded",()=>{
   function paintSettings(){
     const p=prov();
     $("#provSel").value=p;
-    $("#provHint").textContent = p==="gemini"
-      ? "Free key from aistudio.google.com/apikey — no card. Note: Google may use free-tier prompts to improve its models."
-      : "Paid key from console.anthropic.com. Needs prepaid credit; set a spend cap.";
+    const hints={
+      gemini:"Free key from aistudio.google.com/apikey — no card. Google may use free-tier prompts to improve its models.",
+      groq:"Free key from console.groq.com — no card, roughly 1,000 requests/day on Llama 3.3 70B. Prompts may be used to improve models. No web research on this provider.",
+      anthropic:"Paid key from console.anthropic.com. Needs prepaid credit; set a spend cap."};
+    $("#provHint").textContent=hints[p];
     const ms=$("#modelSel");
     ms.innerHTML=MODELS[p].map(m=>`<option value="${m.v}">${m.l}</option>`).join("");
     ms.value=modelFor(p);
     k.value="";
-    k.placeholder=keyFor(p)?"••••••••••••••••••••  (saved)":(p==="gemini"?"AIza…":"sk-ant-…");
+    k.placeholder=keyFor(p)?"••••••••••••••••••••  (saved)":(p==="gemini"?"AIza…":p==="groq"?"gsk_…":"sk-ant-…");
   }
   paintSettings();
-  if(prov()==="gemini"&&keyFor("gemini")){
-    refreshGeminiModels().then(ok=>{if(ok&&prov()==="gemini")paintSettings()});
-  }
+  if(prov()==="gemini"&&keyFor("gemini")) refreshGeminiModels().then(ok=>{if(ok&&prov()==="gemini")paintSettings()});
+  if(prov()==="groq"&&keyFor("groq")) refreshGroqModels().then(ok=>{if(ok&&prov()==="groq")paintSettings()});
   $("#provSel").addEventListener("change",e=>{store.set(LS.prov,e.target.value);paintSettings()});
-  $("#modelSel").addEventListener("change",e=>store.set(prov()==="gemini"?LS.gmodel:LS.model,e.target.value));
+  $("#modelSel").addEventListener("change",e=>store.set(modelSlot(prov()),e.target.value));
   $("#saveKey").addEventListener("click",()=>{
     const v=k.value.trim();
     if(!v){stat($("#sStat"),"Paste a key first.","err");return}
-    store.set(prov()==="gemini"?LS.gkey:LS.key,v);
+    store.set(keySlot(prov()),v);
     paintSettings();
     stat($("#sStat"),"Key saved to this browser only.","ok");
     if(prov()==="gemini") refreshGeminiModels().then(ok=>{if(ok&&prov()==="gemini")paintSettings()});
+    if(prov()==="groq") refreshGroqModels().then(ok=>{if(ok&&prov()==="groq")paintSettings()});
   });
   $("#clearKey").addEventListener("click",()=>{
-    store.del(prov()==="gemini"?LS.gkey:LS.key);
+    store.del(keySlot(prov()));
     paintSettings();
     stat($("#sStat"),"Key removed.","ok");
   });
@@ -1510,6 +1690,17 @@ document.addEventListener("DOMContentLoaded",()=>{
     inp.value="";
   }
   $("#rFile").addEventListener("change",()=>takeFile($("#rFile"),$("#rStat")));
+  $("#bFile").addEventListener("change",async()=>{
+    const f=$("#bFile").files&&$("#bFile").files[0]; if(!f)return;
+    stat($("#iStat"),"Reading "+f.name+"…","load");
+    try{
+      const text=(await fileToText(f)).trim();
+      if(text.length<200) throw new Error("Couldn't read enough text from that file — try a TXT export.");
+      $("#yResume").value=text;
+      stat($("#iStat"),"Extracted "+f.name+" — now hit Parse into entries.","ok");
+    }catch(err){stat($("#iStat"),err.message,"err")}
+    $("#bFile").value="";
+  });
   $("#pFile").addEventListener("change",()=>takeFile($("#pFile"),$("#pStat")));
   $$(".ovclear").forEach(b=>b.addEventListener("click",()=>{OVERRIDE=null;paintOverride()}));
 
@@ -1526,7 +1717,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     $("#rehTitle").textContent=st.title||"";
     $("#rehBody").hidden=true; $("#rehFU").hidden=true; $("#rehHint").hidden=false;
     $("#rehBody").innerHTML=["situation","task","action","result"].map(kk=>st[kk]
-      ?'<p style="margin-top:12px"><b style="color:var(--clay)">'+kk[0].toUpperCase()+kk.slice(1)+'.</b> '+esc(st[kk])+'</p>':"").join("");
+      ?'<p style="margin-top:12px"><b style="color:var(--clay)">'+kk[0].toUpperCase()+kk.slice(1)+'.</b> '+esc(stripMd(st[kk]))+'</p>':"").join("");
     $("#rehFU").innerHTML="<b>They will ask:</b> "+(st.followUps||[]).map(esc).join("  ·  ");
     stopT(); rLeft=90; tShow();
   }
