@@ -494,6 +494,36 @@ button,input,textarea,select{font:inherit;color:inherit}
     <!-- ---------- EXPERIENCE BANK ---------- -->
     <div class="panel" data-panel="bank" role="tabpanel" hidden>
       <div class="card on-white">
+        <h3>Your resume</h3>
+        <p class="card-note">This site ships with Fahim's record as the example. Replace it with your own — paste your resume and parse it into an experience bank, or start blank and add entries by hand.</p>
+        <div class="g2" style="margin-top:24px">
+          <div class="field" style="margin-top:0">
+            <label for="yName">Name</label>
+            <input type="text" id="yName" class="inp" placeholder="Your name" />
+          </div>
+          <div class="field" style="margin-top:0">
+            <label for="yHead">Headline</label>
+            <input type="text" id="yHead" class="inp" placeholder="e.g. SOC Analyst — B.S. Cybersecurity (2027)" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="ySkills">Skills (comma-separated)</label>
+          <input type="text" id="ySkills" class="inp" placeholder="Splunk, Python, Nessus…" />
+        </div>
+        <div class="field">
+          <label for="yResume">Paste your resume</label>
+          <textarea id="yResume" placeholder="Paste the plain text of your resume here."></textarea>
+          <p class="hint">Parse into entries uses your saved API key (the free Gemini one works). No key? Add as one entry, then split it by hand.</p>
+        </div>
+        <div class="bar">
+          <button class="btn btn-dark btn-sm" id="impAI">Parse into entries</button>
+          <button class="btn btn-white btn-sm" id="impOne">Add as one entry</button>
+          <button class="btn btn-white btn-sm" id="impBlank">Start blank</button>
+          <span class="sp"></span>
+          <span class="stat-line" id="iStat"></span>
+        </div>
+      </div>
+      <div class="card on-white">
         <h3>Experience bank</h3>
         <p class="card-note">
           The only material any output is allowed to draw from. Write plainly — rough honest detail
@@ -521,22 +551,25 @@ button,input,textarea,select{font:inherit;color:inherit}
         <p class="card-note">Optional. Without one, use the Copy prompt buttons instead — everything else still works.</p>
         <div class="note note-amber">
           <b>Read this before pasting a key.</b> It is stored in this browser's local storage and sent
-          straight to Anthropic from this page. That is fine for a personal tool on your own machine.
-          It is not fine on a shared computer. Never commit a key to the repo, and set a spend cap on it
-          in the Anthropic console.
+          straight to the provider you pick (Google or Anthropic) from this page. That is fine for a personal tool on your own machine.
+          It is not fine on a shared computer. Never commit a key to the repo; if it's a paid key, set a spend cap in the provider console.
         </div>
         <div class="field">
-          <label for="apiKey">Anthropic API key</label>
-          <input type="password" id="apiKey" class="inp" placeholder="sk-ant-…" autocomplete="off" />
-          <p class="hint">Cleared from this box once saved.</p>
+          <label for="provSel">Provider</label>
+          <select id="provSel" class="inp">
+            <option value="gemini">Google Gemini — free tier, no card needed</option>
+            <option value="anthropic">Anthropic Claude — paid, strongest models</option>
+          </select>
+          <p class="hint" id="provHint"></p>
+        </div>
+        <div class="field">
+          <label for="apiKey">API key</label>
+          <input type="password" id="apiKey" class="inp" placeholder="AIza… or sk-ant-…" autocomplete="off" />
+          <p class="hint">Cleared from this box once saved. One key per provider — switching providers keeps both.</p>
         </div>
         <div class="field">
           <label for="modelSel">Model</label>
-          <select id="modelSel" class="inp">
-            <option value="claude-sonnet-5">Claude Sonnet 5 — balanced, good default</option>
-            <option value="claude-opus-5">Claude Opus 5 — strongest, slower</option>
-            <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 — fastest, cheapest</option>
-          </select>
+          <select id="modelSel" class="inp"></select>
         </div>
         <div class="bar">
           <button class="btn btn-dark" id="saveKey">Save key</button>
@@ -687,7 +720,7 @@ const TAXONOMY = [
 /* ============================================================
    APP
    ============================================================ */
-const LS={key:"cl.key",model:"cl.model",exp:"cl.exp",jd:"cl.jd",co:"cl.co",role:"cl.role",out:"cl.out"};
+const LS={key:"cl.key",gkey:"cl.gkey",prov:"cl.prov",model:"cl.model",gmodel:"cl.gmodel",exp:"cl.exp",prof:"cl.prof",jd:"cl.jd",co:"cl.co",role:"cl.role",out:"cl.out"};
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const store={
@@ -697,6 +730,7 @@ const store={
 };
 let EXP = store.get(LS.exp, DEFAULT_EXPERIENCE);
 let BRIEFS = store.get(LS.out, null);
+let PROF = store.get(LS.prof, PROFILE);
 
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
@@ -710,7 +744,7 @@ function terms(text){
   const hay=" "+String(text).replace(/[\n\r]+/g," ")+" ";
   return RX.filter(e=>e.p.some(rx=>rx.test(hay))).map(e=>e.t);
 }
-const corpus=()=>[PROFILE.headline,PROFILE.skills.join(" "),EXP.map(e=>e.title+" "+e.body).join(" ")].join(" ");
+const corpus=()=>[PROF.headline||"",(PROF.skills||[]).join(" "),EXP.map(e=>e.title+" "+e.body).join(" ")].join(" ");
 function analyze(jd){
   const jt=terms(jd), mine=new Set(terms(corpus()));
   const hits=jt.filter(t=>mine.has(t)), gaps=jt.filter(t=>!mine.has(t));
@@ -753,7 +787,7 @@ function storyPrompt({jd,company,role,research}){
 Every story must be traceable to the experience bank below. You may reframe, select detail and sharpen language. You may NOT invent employers, projects, metrics, technologies, timelines or outcomes that are not in the bank. If the bank has no honest material for a category, say so in the "gap" field and write the closest legitimate story from what IS there — do not fabricate to fill the slot. A fabricated story collapses under one follow-up question and costs the candidate the offer.
 
 ## Candidate
-${PROFILE.name} — ${PROFILE.headline}
+${PROF.name||"Candidate"} — ${PROF.headline||"(no headline set)"}
 
 ## Experience bank (only permitted source material)
 ${bank}
@@ -810,7 +844,7 @@ function resumePrompt(jd){
   return `Tailor a resume to the job description below WITHOUT inventing anything.
 
 ## Candidate
-${PROFILE.name} — ${PROFILE.headline}
+${PROF.name||"Candidate"} — ${PROF.headline||"(no headline set)"}
 
 ## Experience bank (only permitted source)
 ${r.map(e=>`### ${e.title}\n${e.body}`).join("\n\n")}
@@ -833,14 +867,59 @@ Not evidenced: ${a.gaps.join(", ")||"none"}
 Keep every claim traceable to the bank. Flag anything uncertain rather than smoothing it over.`;
 }
 
+function importPrompt(txt){
+  return `Parse this resume into structured JSON for a job-application tool. Return ONLY valid JSON, no markdown fences, no preamble.
+
+{"profile":{"name":"","headline":"one line: current role or degree, one clause","skills":["tool or skill"]},
+ "entries":[{"title":"short name of a job, project or achievement","body":"2-5 plain sentences of what this person actually did, keeping their real numbers and tool names"}]}
+
+Rules: use only what is in the resume text. Never invent, inflate or estimate anything. Produce 4-10 entries covering jobs, projects and notable achievements. Keep metrics exactly as written.
+
+Resume:
+"""
+${txt}
+"""`;
+}
+
 /* ---------- API ---------- */
+const MODELS={
+  anthropic:[
+    {v:"claude-sonnet-5",l:"Claude Sonnet 5 — balanced, good default"},
+    {v:"claude-opus-5",l:"Claude Opus 5 — strongest, slower"},
+    {v:"claude-haiku-4-5-20251001",l:"Claude Haiku 4.5 — fastest, cheapest"}],
+  gemini:[
+    {v:"gemini-2.5-flash",l:"Gemini 2.5 Flash — free tier, good default"},
+    {v:"gemini-2.5-pro",l:"Gemini 2.5 Pro — stronger, tighter free limits"}]
+};
+const prov=()=>store.get(LS.prov,"gemini");
+const keyFor=p=>store.get(p==="gemini"?LS.gkey:LS.key,"");
+const modelFor=p=>store.get(p==="gemini"?LS.gmodel:LS.model,MODELS[p][0].v);
+
 async function callClaude(prompt,{research,onStatus}={}){
-  const key=store.get(LS.key,"");
-  if(!key) throw new Error("No API key saved. Add one in Settings, or use Copy prompt.");
-  const model=store.get(LS.model,"claude-sonnet-5");
-  const body={model,max_tokens:8000,messages:[{role:"user",content:prompt}]};
-  if(research) body.tools=[{type:"web_search_20250305",name:"web_search",max_uses:6}];
+  const p=prov(), key=keyFor(p);
+  if(!key) throw new Error(`No ${p==="gemini"?"Gemini":"Anthropic"} key saved. Add one in Settings, or use Copy prompt.`);
   onStatus?.(research?"Researching the company…":"Writing…");
+  if(p==="gemini"){
+    const body={contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{maxOutputTokens:8192}};
+    if(research) body.tools=[{google_search:{}}];
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelFor("gemini")}:generateContent`,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","x-goog-api-key":key},
+      body:JSON.stringify(body)
+    });
+    if(!res.ok){
+      let d="";try{const j=await res.json();d=j?.error?.message||""}catch{}
+      if(res.status===400&&/key|credential/i.test(d)) throw new Error("Gemini rejected the key — AI Studio keys start with AIza. Check Settings.");
+      if(res.status===429) throw new Error("Gemini free-tier limit hit. Wait a minute and retry.");
+      throw new Error(`Gemini error ${res.status}${d?": "+d.slice(0,140):""}`);
+    }
+    const data=await res.json();
+    const out=(data.candidates?.[0]?.content?.parts||[]).map(x=>x.text||"").join("").trim();
+    if(!out) throw new Error("Gemini returned an empty response. Try again.");
+    return out;
+  }
+  const body={model:modelFor("anthropic"),max_tokens:8000,messages:[{role:"user",content:prompt}]};
+  if(research) body.tools=[{type:"web_search_20250305",name:"web_search",max_uses:6}];
   const res=await fetch("https://api.anthropic.com/v1/messages",{
     method:"POST",
     headers:{"Content-Type":"application/json","x-api-key":key,
@@ -1014,20 +1093,75 @@ document.addEventListener("DOMContentLoaded",()=>{
     a.href=u; a.download="experience-bank.json"; a.click(); URL.revokeObjectURL(u);
   });
 
+  /* your resume */
+  const paintProf=()=>{
+    $("#yName").value=PROF.name||"";
+    $("#yHead").value=PROF.headline||"";
+    $("#ySkills").value=(PROF.skills||[]).join(", ");
+  };
+  paintProf();
+  const saveProf=()=>store.set(LS.prof,PROF);
+  $("#yName").addEventListener("input",e=>{PROF.name=e.target.value;saveProf()});
+  $("#yHead").addEventListener("input",e=>{PROF.headline=e.target.value;saveProf()});
+  $("#ySkills").addEventListener("input",e=>{PROF.skills=e.target.value.split(",").map(x=>x.trim()).filter(Boolean);saveProf()});
+  $("#impBlank").addEventListener("click",()=>{
+    if(!confirm("Clear the example record and start with an empty bank?"))return;
+    EXP=[]; PROF={name:"",headline:"",skills:[]};
+    store.set(LS.exp,EXP); saveProf(); renderExp(); paintProf();
+    stat($("#iStat"),"Blank bank ready. Add entries below.","ok");
+  });
+  $("#impOne").addEventListener("click",()=>{
+    const t=$("#yResume").value.trim();
+    if(t.length<80){stat($("#iStat"),"Paste your resume first.","err");return}
+    EXP.push({id:"r"+Date.now(),title:"Imported resume",body:t});
+    store.set(LS.exp,EXP); renderExp();
+    stat($("#iStat"),"Added as one entry. Split it up for better matching.","ok");
+  });
+  $("#impAI").addEventListener("click",async()=>{
+    const t=$("#yResume").value.trim();
+    if(t.length<80){stat($("#iStat"),"Paste your resume first.","err");return}
+    if(!confirm("Replace the current profile and bank with entries parsed from this resume?"))return;
+    const b=$("#impAI"); b.disabled=true; stat($("#iStat"),"Parsing…","load");
+    try{
+      const raw=await callClaude(importPrompt(t));
+      const p=parseJSON(raw);
+      if(!p.entries?.length) throw new Error("Could not find entries in the response. Try again.");
+      EXP=p.entries.map((e,i)=>({id:"p"+i+Date.now(),title:e.title||"Entry",body:e.body||""}));
+      PROF={name:p.profile?.name||"",headline:p.profile?.headline||"",skills:p.profile?.skills||[]};
+      store.set(LS.exp,EXP); saveProf(); renderExp(); paintProf();
+      stat($("#iStat"),EXP.length+" entries created. Review each one — fix anything the parser got wrong.","ok");
+    }catch(e){stat($("#iStat"),e.message,"err")}finally{b.disabled=false}
+  });
+
   /* settings */
   const k=$("#apiKey");
-  if(store.get(LS.key,"")) k.placeholder="••••••••••••••••••••  (saved)";
-  $("#modelSel").value=store.get(LS.model,"claude-sonnet-5");
+  function paintSettings(){
+    const p=prov();
+    $("#provSel").value=p;
+    $("#provHint").textContent = p==="gemini"
+      ? "Free key from aistudio.google.com/apikey — no card. Note: Google may use free-tier prompts to improve its models."
+      : "Paid key from console.anthropic.com. Needs prepaid credit; set a spend cap.";
+    const ms=$("#modelSel");
+    ms.innerHTML=MODELS[p].map(m=>`<option value="${m.v}">${m.l}</option>`).join("");
+    ms.value=modelFor(p);
+    k.value="";
+    k.placeholder=keyFor(p)?"••••••••••••••••••••  (saved)":(p==="gemini"?"AIza…":"sk-ant-…");
+  }
+  paintSettings();
+  $("#provSel").addEventListener("change",e=>{store.set(LS.prov,e.target.value);paintSettings()});
+  $("#modelSel").addEventListener("change",e=>store.set(prov()==="gemini"?LS.gmodel:LS.model,e.target.value));
   $("#saveKey").addEventListener("click",()=>{
     const v=k.value.trim();
     if(!v){stat($("#sStat"),"Paste a key first.","err");return}
-    store.set(LS.key,v); k.value=""; k.placeholder="••••••••••••••••••••  (saved)";
+    store.set(prov()==="gemini"?LS.gkey:LS.key,v);
+    paintSettings();
     stat($("#sStat"),"Key saved to this browser only.","ok");
   });
   $("#clearKey").addEventListener("click",()=>{
-    store.del(LS.key); k.value=""; k.placeholder="sk-ant-…"; stat($("#sStat"),"Key removed.","ok");
+    store.del(prov()==="gemini"?LS.gkey:LS.key);
+    paintSettings();
+    stat($("#sStat"),"Key removed.","ok");
   });
-  $("#modelSel").addEventListener("change",e=>store.set(LS.model,e.target.value));
   $("#wipe").addEventListener("click",()=>{
     if(!confirm("Erase everything this site has stored in your browser?"))return;
     Object.values(LS).forEach(store.del); location.reload();
