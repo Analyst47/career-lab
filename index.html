@@ -474,6 +474,7 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
             <span class="scoremeta" id="rVerdict" style="font-weight:700"></span>
           </div>
           <div class="meter"><i id="rMeter" style="width:0"></i></div>
+          <p class="card-note" style="margin-top:16px">Weighted: terms under a Required heading count triple, body mentions double, Preferred once. No real applicant tracking system publishes a match percentage, so treat this as a relative signal for prioritising your effort, not a score any employer will see.</p>
           <div style="margin-top:30px">
             <span class="mono">You can evidence this</span>
             <div class="chips" id="rHits"></div>
@@ -489,6 +490,25 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
             <span class="stat-line" id="tStat"></span>
           </div>
         </div>
+
+        <div class="card" id="rKoCard" hidden>
+          <h3>Hard requirements</h3>
+          <p class="card-note">These are what actually eliminate applications: knockout questions on the form and filters a recruiter sets. They sit outside the percentage, because a strong keyword match with a missing mandatory credential is still a rejection.</p>
+          <div id="rKo"></div>
+        </div>
+
+        <div class="card" id="rParseCard" hidden>
+          <h3>Parse check</h3>
+          <p class="card-note">Parsing runs before matching. If the system cannot pull your fields into structured data, keyword work never gets read. This runs against the text actually extracted from your file, which is what a parser sees.</p>
+          <div id="rParse"></div>
+        </div>
+
+        <div class="card" id="rMirrorCard" hidden>
+          <h3>Match their wording</h3>
+          <p class="card-note">Candidate search inside these systems is literal rather than semantic, so two names for one thing are two different tokens. Where you have genuinely done the thing the posting names, switch to its phrasing. Where you have not, leave it alone and treat it as a gap.</p>
+          <div id="rMirror"></div>
+        </div>
+
         <div class="card">
           <h3>Lead with these</h3>
           <p class="card-note">Ranked by overlap with this posting. Put them in this order on the page.</p>
@@ -813,11 +833,17 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
 const PROFILE = {
   name: "Fahim Abrar",
   headline: "Information Security Analyst, B.S. Computing & Informatics, cybersecurity minor (Dec 2026)",
-  skills: ["Tenable Nessus","Splunk","Microsoft Sentinel","Metasploit","Nmap","Wireshark","NetScaler",
-    "ServiceNow","Python","SQL","Bash","Linux","Active Directory","Azure","API integration","IDS/IPS",
-    "Firewalls","Vulnerability management","Threat detection","Threat hunting","Incident response",
-    "Security automation","Risk assessment","Log analysis","Penetration testing","NIST CSF",
-    "CIS Benchmarks","ISO 27001","PCI DSS","HIPAA","GDPR","SOX"]
+  skills: ["Microsoft Sentinel","Tenable Nessus","Wireshark","Suricata","Security Onion","Elastic","Kibana",
+    "Nmap","ServiceNow","Citrix NetScaler","Azure","Active Directory","Windows Server",
+    "Python","SQL","Bash","Linux","REST API integration",
+    "SIEM","alert triage","event correlation","log analysis","false positive analysis","IOC analysis",
+    "incident response","incident response lifecycle","escalation procedures","case management","ticketing",
+    "security reporting","vulnerability scanning","vulnerability management","CVE","CVSS","CISA KEV",
+    "patch management","remediation tracking","risk assessment","threat intelligence","threat detection",
+    "threat hunting","phishing analysis","URL analysis","IDS/IPS","custom IDS rule development",
+    "detection engineering","anomaly detection","PCAP","network traffic analysis","packet capture",
+    "security automation","secrets management","reverse proxy",
+    "MITRE ATT&CK","NIST CSF","NIST SP 800-53","CIS Benchmarks","ISO 27001","Zero Trust"]
 };
 
 const DEFAULT_EXPERIENCE = [
@@ -877,7 +903,8 @@ const TAXONOMY = [
   {t:"SOAR",a:["soar","security orchestration"]},
   {t:"Python",a:["python"]},
   {t:"SQL",a:["sql","relational database"]},
-  {t:"Bash/Shell",a:["bash","shell scripting","powershell","shell"]},
+  {t:"Bash/Shell",a:["bash","shell scripting","shell"]},
+  {t:"PowerShell",a:["powershell","pwsh"]},
   {t:"Linux",a:["linux","unix","rhel","ubuntu"]},
   {t:"Windows Server",a:["windows server","windows administration"]},
   {t:"Active Directory",a:["active directory","ad","entra","azure ad","ldap"]},
@@ -924,7 +951,56 @@ const TAXONOMY = [
   {t:"CEH",a:["ceh","certified ethical hacker"]},
   {t:"GIAC",a:["giac","gcih","gsec","gcia"]},
   {t:"CySA+",a:["cysa","cybersecurity analyst+"]},
-  {t:"Clearance",a:["security clearance","clearance","public trust","ts/sci","secret clearance"]}
+  {t:"Clearance",a:["security clearance","clearance","public trust","ts/sci","secret clearance"]},
+  /* --- added from posting research: terms that recur across real
+     entry-level security and network analyst listings --- */
+  {t:"Alert triage",a:["alert triage","triage alert","initial triage","event triage","alert validation"]},
+  {t:"False positive analysis",a:["false positive","true positive","alert tuning","alert fatigue"]},
+  {t:"Escalation",a:["escalate","escalation","tier 2","tier ii","handoff"]},
+  {t:"Playbooks & runbooks",a:["playbook","runbook","standard operating procedure","sop"]},
+  {t:"Indicators of compromise",a:["indicator of compromise","ioc","indicators of compromise"]},
+  {t:"Detection engineering",a:["detection engineering","detection rule","correlation rule","use case development","signature development","custom rule"]},
+  {t:"Suricata / Snort",a:["suricata","snort","zeek"]},
+  {t:"Security Onion",a:["security onion","network security monitoring"]},
+  {t:"Elastic / Kibana",a:["elastic","elasticsearch","kibana","elk stack","opensearch"]},
+  {t:"PCAP / packet analysis",a:["pcap","packet capture","packet analysis","deep packet inspection","network traffic analysis"]},
+  {t:"NDR",a:["ndr","network detection and response","darktrace","vectra","extrahop"]},
+  {t:"UEBA",a:["ueba","user behavior analytics","insider threat"]},
+  {t:"Microsoft Defender",a:["defender","microsoft defender","defender for endpoint"]},
+  {t:"Entra ID",a:["entra","azure ad","azure active directory","entra id"]},
+  {t:"MFA / SSO",a:["mfa","multi-factor","two-factor","2fa","sso","single sign-on"]},
+  {t:"Privileged access",a:["pam","privileged access","cyberark","least privilege"]},
+  {t:"Access reviews",a:["access review","entitlement review","provisioning","deprovisioning"]},
+  {t:"Patch management",a:["patch management","patching","patch cycle","remediation sla"]},
+  {t:"Asset inventory",a:["asset inventory","asset management","cmdb","asset discovery"]},
+  {t:"CVE / CVSS",a:["cve","cvss","common vulnerabilities"]},
+  {t:"CISA KEV",a:["kev","known exploited vulnerabilities","cisa kev"]},
+  {t:"Threat modeling",a:["threat model","attack surface","kill chain"]},
+  {t:"Change management",a:["change management","change control","change advisory"]},
+  {t:"Vendor & third-party risk",a:["third party risk","vendor risk","supplier risk","tprm","vendor assessment"]},
+  {t:"GRC",a:["grc","governance risk","policy development","control framework"]},
+  {t:"Encryption / PKI",a:["encryption","pki","certificate management","tls"]},
+  {t:"VPN",a:["vpn","remote access","ipsec"]},
+  {t:"Network segmentation",a:["segmentation","vlan","microsegmentation","dmz"]},
+  {t:"Load balancing",a:["load balanc","netscaler","f5 big-ip","reverse proxy"]},
+  {t:"Email security",a:["email security","secure email gateway","proofpoint","dmarc","spf record","dkim"]},
+  {t:"Web / proxy filtering",a:["web filtering","zscaler","casb","sase"]},
+  {t:"Backup & recovery",a:["backup","disaster recovery","business continuity"]},
+  {t:"Tabletop exercises",a:["tabletop","purple team","red team","blue team"]},
+  {t:"SOC operations",a:["security operations center","soc analyst"]},
+  {t:"Metrics & reporting",a:["kpi","metric","dashboard","executive report","status report"]},
+  {t:"Zero Trust",a:["zero trust","ztna"]},
+  {t:"NIST 800-53",a:["800-53"]},
+  {t:"NIST 800-171 / CMMC",a:["800-171","cmmc"]},
+  {t:"SOC 2",a:["soc 2","service organization control"]},
+  {t:"FISMA",a:["fisma","authority to operate"]},
+  {t:"Vulnerability scanning",a:["vulnerability scan","authenticated scan","credentialed scan"]},
+  {t:"Anomaly detection",a:["anomaly detection","outlier detection","isolation forest","baselining"]},
+  {t:"REST APIs",a:["rest api","api integration","webhook"]},
+  {t:"Git",a:["github","gitlab","version control"]},
+  {t:"Network+",a:["comptia network"]},
+  {t:"CCNA",a:["ccna","cisco certified"]},
+  {t:"Azure security certs",a:["az-500","sc-200","sc-900"]}
 ];
 
 /* ============================================================
@@ -948,7 +1024,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
    "phi" inside "phishing", "cti" inside "activities") --- */
 const RX = TAXONOMY.map(e=>({
   t:e.t,
-  p:e.a.map(a=>new RegExp("(^|[^a-zA-Z0-9])"+a.trim().replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"([^a-zA-Z0-9]|$)","i"))
+  p:e.a.map(a=>new RegExp("(^|[^a-zA-Z0-9])"+a.trim().replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(s|es)?([^a-zA-Z0-9]|$)","i"))
 }));
 function terms(text){
   const hay=" "+String(text).replace(/[\n\r]+/g," ")+" ";
@@ -959,6 +1035,178 @@ function analyze(jd){
   const jt=terms(jd), mine=new Set(terms(corpus()));
   const hits=jt.filter(t=>mine.has(t)), gaps=jt.filter(t=>!mine.has(t));
   return {jt,hits,gaps,score:jt.length?Math.round(hits.length/jt.length*100):0};
+}
+
+/* ============================================================
+   ATS ENGINE
+   Real applicant tracking systems do not emit a match score.
+   What they consistently do is a three-phase pipeline:
+   parse -> match -> rank. Fail parsing and matching never runs.
+   Everything below models that pipeline instead of inventing
+   a single number and calling it an ATS result.
+   ============================================================ */
+
+/* --- phase 2a: requirement weighting -----------------------
+   A term under "Required" is not worth the same as one under
+   "Nice to have". Unweighted counting lets a throwaway bonus
+   item drag the score as hard as a core requirement. --- */
+const HEAD_REQ=/(minimum|basic)\s+(qualification|requirement)|^\s*(required|requirements?|must[\s-]?haves?|qualifications?|what you'?ll need|what we require|essential)\b/i;
+const HEAD_PREF=/^\s*(preferred|preferences?|nice[\s-]to[\s-]have|desired|desirable|bonus|a plus|pluses|additional|would be a plus)\b/i;
+const WEIGHT={req:3,body:2,pref:1};
+
+function splitJD(jd){
+  const out={req:[],pref:[],body:[]};
+  let mode="body";
+  for(const raw of String(jd).split(/\r?\n/)){
+    const ln=raw.trim();
+    if(ln && ln.length<140){
+      if(HEAD_REQ.test(ln)){mode="req"; out.req.push(ln); continue}
+      if(HEAD_PREF.test(ln)){mode="pref"; out.pref.push(ln); continue}
+    }
+    out[mode].push(raw);
+  }
+  return {req:out.req.join("\n"),pref:out.pref.join("\n"),body:out.body.join("\n")};
+}
+
+function weighType(t,sets){
+  if(sets.req.has(t)) return "req";
+  if(sets.body.has(t)) return "body";
+  return "pref";
+}
+
+function matchReport(jd,resumeText){
+  const s=splitJD(jd);
+  const sets={req:new Set(terms(s.req)),pref:new Set(terms(s.pref)),body:new Set(terms(s.body))};
+  const mine=new Set(terms(resumeText));
+  const all=terms(jd);
+  let got=0,tot=0;
+  const hits=[],gaps=[];
+  for(const t of all){
+    const kind=weighType(t,sets), w=WEIGHT[kind];
+    tot+=w;
+    (mine.has(t)?hits:gaps).push({t,kind,w});
+  }
+  hits.forEach(h=>{got+=h.w});
+  const ord={req:0,body:1,pref:2};
+  hits.sort((a,b)=>ord[a.kind]-ord[b.kind]);
+  gaps.sort((a,b)=>ord[a.kind]-ord[b.kind]);
+  return {
+    score: tot?Math.round(got/tot*100):0,
+    hits, gaps, detected:all.length,
+    reqTotal: all.filter(t=>weighType(t,sets)==="req").length,
+    reqHit: hits.filter(h=>h.kind==="req").length
+  };
+}
+
+/* --- phase 2b: knockouts -----------------------------------
+   These are the criteria that actually eliminate candidates:
+   application-form questions and hard filters. They belong
+   outside the percentage, because a 90% match with no required
+   clearance is still a rejection. --- */
+const KNOCKOUTS=[
+  {k:"Security clearance", jd:/security clearance|secret clearance|top secret|ts\/sci|public trust|q clearance/i, mine:/clearance|ts\/sci/i},
+  {k:"CompTIA Security+", jd:/security\s*\+|comptia\s+security/i, mine:/security\s*\+|comptia\s+security/i},
+  {k:"CySA+", jd:/cysa\s*\+/i, mine:/cysa\s*\+/i},
+  {k:"CISSP", jd:/\bcissp\b/i, mine:/\bcissp\b/i},
+  {k:"CEH", jd:/\bceh\b|certified ethical hacker/i, mine:/\bceh\b|certified ethical hacker/i},
+  {k:"Bachelor's degree", jd:/bachelor|\bb\.?s\.?\b|\bb\.?a\.?\b|undergraduate degree|four[\s-]year degree/i, mine:/bachelor|\bb\.?s\.?\b|\bb\.?a\.?\b/i},
+  {k:"Driver's licence", jd:/driver'?s licen[cs]e/i, mine:/driver'?s licen[cs]e/i},
+  {k:"On-call / shift work", jd:/on[\s-]call|rotating shift|24x7|24\/7 (?:shift|coverage|rotation)|night shift/i, mine:/on[\s-]call|shift/i}
+];
+
+function knockoutReport(jd,resumeText){
+  const rows=[];
+  for(const k of KNOCKOUTS){
+    if(!k.jd.test(jd)) continue;
+    rows.push({k:k.k, met:k.mine.test(resumeText)});
+  }
+  const yrs=String(jd).match(/(\d{1,2})\s*\+?\s*(?:or more\s*)?(?:years?|yrs?)\b[^.\n]{0,50}?(?:experience|background|working)/i);
+  if(yrs) rows.push({k:yrs[1]+"+ years experience", met:null});
+  return rows;
+}
+
+/* --- phase 2c: exact-phrase mirroring ----------------------
+   ATS candidate search is literal, not semantic. "Microsoft
+   Sentinel" and "Azure Sentinel" are different tokens. Where
+   the posting and the resume use different wording for the
+   same thing, the resume should adopt the posting's string. --- */
+function surfaceOf(text,alias){
+  const rx=new RegExp("(^|[^a-zA-Z0-9])("+alias.trim().replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"(?:s|es)?)([^a-zA-Z0-9]|$)","i");
+  const m=String(text).match(rx);
+  return m?m[2]:null;
+}
+function mirrorReport(jd,resumeText){
+  const out=[];
+  for(const e of TAXONOMY){
+    let theirs=null;
+    for(const a of e.a){ const s=surfaceOf(jd,a); if(s){theirs=s;break} }
+    if(!theirs) continue;
+    /* If the posting's own phrasing already appears in the resume there is
+       nothing to change. Only report when their exact string is absent but
+       we do use some other name for the same concept. */
+    if(surfaceOf(resumeText,theirs)) continue;
+    let yours=null;
+    for(const a of e.a){ const s=surfaceOf(resumeText,a); if(s){yours=s;break} }
+    if(!yours) continue;
+    if(theirs.toLowerCase().replace(/\s+/g," ")===yours.toLowerCase().replace(/\s+/g," ")) continue;
+    out.push({t:e.t,theirs,yours});
+  }
+  return out;
+}
+
+/* --- phase 1: parse check ----------------------------------
+   The real gate. If the parser cannot pull your fields into
+   structured data you never reach matching, and no amount of
+   keyword work helps. These checks run on the text actually
+   extracted from the file, which is what a parser would see. --- */
+function parseReport(text,pages){
+  const t=String(text||"");
+  const words=t.trim().split(/\s+/).filter(Boolean).length;
+  const pass=[],warn=[],fail=[];
+
+  if(words<180) fail.push("Only "+words+" words extracted. The file is likely image-based or built from graphics, so a parser reads almost nothing. Export a real text PDF from Word or Docs.");
+  else pass.push(words+" words extracted cleanly");
+
+  if(pages && words/pages<220) warn.push("Roughly "+Math.round(words/pages)+" words per page. Low density often means text trapped in images, columns, or text boxes.");
+
+  if(/[\w.+-]+@[\w-]+\.[\w.]{2,}/.test(t)) pass.push("Email found in body text");
+  else fail.push("No email address in the body text. Contact details placed in a header or footer are frequently dropped by parsers.");
+
+  if(/(?:\+?\d[\d\s().-]{7,}\d)/.test(t)) pass.push("Phone number found in body text");
+  else warn.push("No phone number detected in the body text.");
+
+  const heads=[["Experience",/\b(experience|employment|work history|professional experience)\b/i],
+               ["Education",/\beducation\b/i],
+               ["Skills",/\b(skills|technical skills|core competencies)\b/i]];
+  const missing=heads.filter(h=>!h[1].test(t)).map(h=>h[0]);
+  if(!missing.length) pass.push("Standard section headers present (Experience, Education, Skills)");
+  else fail.push("Missing standard section header(s): "+missing.join(", ")+". Parsers map fields by these exact words, so creative headings lose whole sections.");
+
+  if(/[\u2588\u2589\u258a\u258b\u258c\u2593\u2592\u2591\u25cf\u25cb\u2605\u2606]/.test(t))
+    fail.push("Skill-bar or rating glyphs detected. These carry no text value and signal a graphical layout that parses badly.");
+  else pass.push("No rating-bar or icon glyphs");
+
+  const tabby=t.split(/\r?\n/).filter(l=>(l.match(/\t/g)||[]).length>=2).length;
+  if(tabby>=2) warn.push(tabby+" lines contain multiple tab stops, which usually indicates a table or column layout. Single-column is the safe format.");
+
+  if(/\b(19|20)\d{2}\s*[–—]\s*(19|20)\d{2}\b/.test(t) && /\b(19|20)\d{2}\s*-\s*(19|20)\d{2}\b/.test(t))
+    warn.push("Mixed dash styles in date ranges. Keep one form so date parsing stays consistent.");
+
+  return {pass,warn,fail,words};
+}
+
+/* --- phase 3: title proximity ------------------------------
+   Workday's ranking engine leans on title matching, so the
+   distance between the posting's title and yours is a real
+   signal rather than a cosmetic one. --- */
+function titleReport(jd,resumeText){
+  const first=String(jd).split(/\r?\n/).map(s=>s.trim()).filter(Boolean).slice(0,6);
+  const cand=first.find(l=>l.length<80 && /\b(analyst|engineer|specialist|administrator|technician|architect|consultant|associate|intern)\b/i.test(l));
+  if(!cand) return null;
+  const norm=s=>s.toLowerCase().replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(w=>w.length>2&&!/^(the|and|for|with|our|you|will|are|job|role|position|senior|junior)$/.test(w));
+  const a=new Set(norm(cand)), b=new Set(norm(resumeText.slice(0,1200)));
+  const shared=[...a].filter(w=>b.has(w));
+  return {title:cand, shared, pct:a.size?Math.round(shared.length/a.size*100):0};
 }
 function ranked(jd){
   const jt=new Set(terms(jd));
@@ -1384,13 +1632,16 @@ function loadScript(src){
   });
   return _scripts[src];
 }
+let LAST_PAGES=0;
 async function fileToText(file){
   const name=file.name.toLowerCase();
+  LAST_PAGES=0;
   if(/\.(txt|md)$/.test(name)) return await file.text();
   if(name.endsWith(".pdf")){
     await loadScript("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js");
     pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
     const doc=await pdfjsLib.getDocument({data:await file.arrayBuffer()}).promise;
+    LAST_PAGES=doc.numPages;
     const out=[];
     for(let i=1;i<=doc.numPages;i++){
       const tc=await (await doc.getPage(i)).getTextContent();
@@ -1491,8 +1742,9 @@ document.addEventListener("DOMContentLoaded",()=>{
   $("#rScan").addEventListener("click",()=>{
     const t=rJD.value.trim();
     if(t.length<60){stat($("#rStat"),"Paste the job description first.","err");return}
-    const a=analyze(t), rk=ranked(t).filter(e=>e.w>0);
-    window.__scan={score:a.score,hits:a.hits,gaps:a.gaps,jd:t};
+    const src=corpus();
+    const a=matchReport(t,src), rk=ranked(t).filter(e=>e.w>0);
+    window.__scan={score:a.score,hits:a.hits.map(h=>h.t),gaps:a.gaps.map(g=>g.t),jd:t};
     $("#rOut").hidden=false;
     $("#rScore").textContent=a.score+"%";
     $("#rMeter").style.width=a.score+"%";
@@ -1502,8 +1754,46 @@ document.addEventListener("DOMContentLoaded",()=>{
     $("#rMeter").style.background=band[0];
     $("#rVerdict").textContent=band[1];
     $("#rVerdict").style.color=band[0];
-    $("#rMeta").textContent=`${a.hits.length} of ${a.jt.length} detected requirements evidenced by your material`;
-    chips($("#rHits"),a.hits,"chip-hit"); chips($("#rGaps"),a.gaps,"chip-gap");
+    const ttl=titleReport(t,src);
+    $("#rMeta").textContent=`${a.reqHit} of ${a.reqTotal} required terms evidenced · ${a.hits.length} of ${a.detected} overall`
+      +(ttl?` · title overlap ${ttl.pct}%`:"");
+
+    const chipw=(el,list,cls)=>{
+      el.innerHTML = list.length
+        ? list.map(o=>`<span class="chip ${cls}" title="${o.kind==="req"?"Required":o.kind==="pref"?"Preferred":"Body mention"}">${esc(o.t)}${o.kind==="req"?" ★":""}</span>`).join("")
+        : `<span class="chip chip-nil">none detected</span>`;
+    };
+    chipw($("#rHits"),a.hits,"chip-hit"); chipw($("#rGaps"),a.gaps,"chip-gap");
+
+    /* hard requirements */
+    const ko=knockoutReport(t,src);
+    $("#rKoCard").hidden=!ko.length;
+    $("#rKo").innerHTML=ko.map(r=>{
+      const mark=r.met===true?"✓":r.met===false?"✕":"?";
+      const col=r.met===true?"var(--green)":r.met===false?"var(--clay-2)":"var(--amber)";
+      const note=r.met===true?"evidenced in your material":r.met===false?"not evidenced — this can eliminate the application":"check this against your own record";
+      return `<div class="pick"><span class="r" style="color:${col}">${mark}</span>
+        <div><b>${esc(r.k)}</b><div class="meta">${note}</div></div></div>`;
+    }).join("");
+
+    /* parse check */
+    const pr=parseReport(src,OVERRIDE?OVERRIDE.pages:0);
+    $("#rParseCard").hidden=false;
+    const row=(txt,col,mark)=>`<div class="pick"><span class="r" style="color:${col}">${mark}</span><div>${esc(txt)}</div></div>`;
+    $("#rParse").innerHTML=
+      pr.fail.map(x=>row(x,"var(--clay-2)","✕")).join("")+
+      pr.warn.map(x=>row(x,"var(--amber)","!")).join("")+
+      pr.pass.map(x=>row(x,"var(--green)","✓")).join("")+
+      (OVERRIDE?"":`<p class="card-note" style="margin-top:14px">Checking your experience bank text. Upload the actual file you submit to test what a parser would really extract.</p>`);
+
+    /* wording mismatches */
+    const mm=mirrorReport(t,src);
+    $("#rMirrorCard").hidden=!mm.length;
+    $("#rMirror").innerHTML=mm.map(m=>
+      `<div class="pick"><span class="r">→</span>
+        <div><b>${esc(m.t)}</b><div class="meta">posting says “${esc(m.theirs)}” · yours says “${esc(m.yours)}” — use theirs if you have actually done it</div></div>
+      </div>`).join("");
+
     $("#rPicks").innerHTML = OVERRIDE
       ? `<p class="card-note">Scoring against the uploaded resume "${esc(OVERRIDE.name)}". Entry ranking applies to the experience bank only. Clear the upload to see it.</p>`
       : rk.length ? rk.map((e,i)=>
@@ -1736,7 +2026,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     try{
       const text=(await fileToText(f)).trim();
       if(text.length<200) throw new Error("Couldn't read enough text from that file. Try a TXT export, or paste it into the bank.");
-      OVERRIDE={name:f.name,text}; paintOverride();
+      OVERRIDE={name:f.name,text,pages:LAST_PAGES}; paintOverride();
       stat(st,"Using "+f.name+" for this scan and generation.","ok");
     }catch(err){stat(st,err.message,"err")}
     inp.value="";
