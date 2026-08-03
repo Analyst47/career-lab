@@ -264,6 +264,27 @@ button,input,textarea,select{font:inherit;color:inherit}
 @media(max-width:640px){.ov-in{padding:24px}}
 .timer{font-family:var(--f-mono);font-size:22px;min-width:70px;text-align:right}
 .timer.low{color:var(--clay-2)}
+.chk{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--gray);cursor:pointer}
+.chk input{width:16px;height:16px;accent-color:var(--ink);cursor:pointer}
+.jcard{border:1px solid var(--line);border-radius:var(--r-sm);background:var(--white);padding:20px 22px;margin-bottom:12px;display:flex;gap:20px;align-items:flex-start}
+.jcard:hover{border-color:var(--ink)}
+.jfit{flex:none;min-width:86px;text-align:center;border-radius:var(--r-sm);padding:12px 8px;background:var(--paper)}
+.jfit b{display:block;font-size:26px;line-height:1.05;font-family:var(--f-sans)}
+.jfit span{display:block;font-size:10px;letter-spacing:.09em;text-transform:uppercase;margin-top:5px;color:var(--gray)}
+.jfit.g{background:rgba(47,133,90,.10)} .jfit.g b{color:var(--green)}
+.jfit.a{background:rgba(178,120,30,.10)} .jfit.a b{color:var(--amber)}
+.jfit.n b{color:var(--gray)}
+.jbody{flex:1;min-width:0}
+.jbody h4{font-size:18px;margin:0 0 4px;line-height:1.3}
+.jbody h4 a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+.jbody h4 a:hover{border-color:var(--ink)}
+.jmeta{font-size:13px;color:var(--gray);display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.jbadge{font-size:10px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:99px;padding:2px 9px}
+.jbadge.rem{border-color:var(--green);color:var(--green)}
+.jbadge.st{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.jgap{font-size:13px;color:var(--gray);margin-top:9px;line-height:1.6}
+.jwhy{font-size:13px;color:var(--gray);margin-top:8px;line-height:1.6;font-style:italic}
+.jacts{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
 .jobrow{border:1px solid var(--line);border-radius:var(--r-sm);padding:15px 18px;margin-bottom:10px;background:var(--white);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .jobrow b{font-size:15.5px;letter-spacing:-.02em}
 .jobrow .meta{font-family:var(--f-mono);font-size:11px;color:var(--gray-2);margin-top:3px}
@@ -436,8 +457,12 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
         <span class="k">04</span><span class="t">Tracker</span>
         <span class="d">Every application, its score, and what keeps blocking you</span>
       </button>
+      <button class="sw" role="tab" data-tab="find" aria-selected="false">
+        <span class="k">05</span><span class="t">Job matches</span>
+        <span class="d">Live openings scored against your resume</span>
+      </button>
       <button class="sw" role="tab" data-tab="set" aria-selected="false">
-        <span class="k">05</span><span class="t">Settings</span>
+        <span class="k">06</span><span class="t">Settings</span>
         <span class="d">API key, model, stored data</span>
       </button>
     </div>
@@ -664,6 +689,83 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
     </div>
 
     <!-- ---------- SETTINGS ---------- -->
+    <!-- ---------- JOB MATCHES ---------- -->
+    <div class="panel" data-panel="find" role="tabpanel" hidden>
+      <div class="card on-white">
+        <h3>Job matches</h3>
+        <p class="card-note">The flow: set your target &rarr; <b>Scan sources</b> (free, no key) &rarr; <b>Score matches</b> (uses your key). Openings are pulled from public company job feeds, filtered against your resume, then scored. Everything is read and kept in this browser.</p>
+        <div class="g2" style="margin-top:24px">
+          <div class="field" style="margin-top:0">
+            <label for="dTitles">Target titles</label>
+            <input type="text" id="dTitles" class="inp" placeholder="security analyst, soc analyst, network analyst" />
+            <p class="hint">Comma separated. A posting must match one of these to be considered.</p>
+          </div>
+          <div class="field" style="margin-top:0">
+            <label for="dLoc">Locations you would take</label>
+            <input type="text" id="dLoc" class="inp" placeholder="new jersey, philadelphia, nj, pa" />
+            <p class="hint">Comma separated. Remote roles always pass this check.</p>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="field" style="margin-top:0">
+            <label for="dYears">Years of experience you can evidence</label>
+            <input type="number" id="dYears" class="inp" min="0" max="40" step="0.5" placeholder="1.5" />
+          </div>
+          <div class="field" style="margin-top:0">
+            <label for="dCap">Postings to score per run</label>
+            <select id="dCap" class="inp">
+              <option value="10">10 (lightest on quota)</option>
+              <option value="20" selected>20</option>
+              <option value="40">40</option>
+            </select>
+            <p class="hint">Scoring calls the model once per posting, so this is the main cost control.</p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="dFeeds">Company feeds</label>
+          <textarea id="dFeeds" style="min-height:130px" placeholder="greenhouse | slug | Display name"></textarea>
+          <p class="hint">One per line: <span class="mono">type | slug | name</span>. Types: greenhouse, lever, ashby, smartrecruiters. The slug is the company identifier in its careers URL, for example <span class="mono">boards.greenhouse.io/<b>datadog</b></span>.</p>
+        </div>
+        <div class="bar">
+          <button class="btn btn-dark" id="dScan">Scan sources</button>
+          <button class="btn btn-white" id="dScore">Score matches</button>
+          <button class="btn btn-white" id="dReset">Reset feeds</button>
+          <span class="sp"></span>
+          <span class="stat-line" id="dStat"></span>
+        </div>
+        <div id="dSources" style="margin-top:18px"></div>
+      </div>
+
+      <div class="card" id="dFilterCard" hidden>
+        <h3>Filters</h3>
+        <div class="bar" style="margin-top:18px;flex-wrap:wrap">
+          <select id="fDate" class="inp" style="max-width:190px">
+            <option value="1">Past 24 hours</option>
+            <option value="7" selected>Past week</option>
+            <option value="30">Past month</option>
+            <option value="0">Any time</option>
+          </select>
+          <select id="fScore" class="inp" style="max-width:190px">
+            <option value="0">Any match</option>
+            <option value="60">60%+ match</option>
+            <option value="80">80%+ match</option>
+          </select>
+          <select id="fSource" class="inp" style="max-width:180px"><option value="">All sources</option></select>
+          <select id="fStatus" class="inp" style="max-width:170px">
+            <option value="">All statuses</option>
+            <option value="new">New</option>
+            <option value="tailored">Tailored</option>
+            <option value="applied">Applied</option>
+          </select>
+          <label class="chk"><input type="checkbox" id="fRemote" /> Remote only</label>
+          <span class="sp"></span>
+          <span class="stat-line" id="dCount"></span>
+        </div>
+      </div>
+
+      <div id="dList"></div>
+    </div>
+
     <div class="panel" data-panel="set" role="tabpanel" hidden>
       <div class="card on-white">
         <h3>API key</h3>
@@ -1006,7 +1108,7 @@ const TAXONOMY = [
 /* ============================================================
    APP
    ============================================================ */
-const LS={key:"cl.key",gkey:"cl.gkey",prov:"cl.prov",model:"cl.model",gmodel:"cl.gmodel",gmodels:"cl.gmodels",qkey:"cl.qkey",qmodel:"cl.qmodel",qmodels:"cl.qmodels",exp:"cl.exp",prof:"cl.prof",jobs:"cl.jobs",owner:"cl.owner",active:"cl.active",jd:"cl.jd",co:"cl.co",role:"cl.role",out:"cl.out"};
+const LS={key:"cl.key",gkey:"cl.gkey",prov:"cl.prov",model:"cl.model",gmodel:"cl.gmodel",gmodels:"cl.gmodels",qkey:"cl.qkey",qmodel:"cl.qmodel",qmodels:"cl.qmodels",exp:"cl.exp",prof:"cl.prof",jobs:"cl.jobs",owner:"cl.owner",active:"cl.active",jd:"cl.jd",co:"cl.co",role:"cl.role",out:"cl.out",feeds:"cl.feeds",disc:"cl.disc",dscore:"cl.dscore",dfilt:"cl.dfilt",dstat:"cl.dstat"};
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
 const store={
@@ -1667,6 +1769,168 @@ const bankSrc=()=>OVERRIDE
   ? "### Uploaded resume ("+OVERRIDE.name+")\n"+OVERRIDE.text
   : EXP.map(e=>"### "+e.title+"\n"+e.body).join("\n\n");
 
+/* ============================================================
+   JOB DISCOVERY
+   Ingest public company job feeds through the Worker, filter
+   them against the active resume with cheap rules, then score
+   the survivors with the model. Two stages because scoring
+   costs a call per posting and rule filtering costs nothing.
+   Jobs, scores and status all live in this browser.
+   ============================================================ */
+
+const DEFAULT_FEEDS = [
+  "greenhouse | cloudflare | Cloudflare",
+  "greenhouse | datadog | Datadog",
+  "greenhouse | gitlab | GitLab",
+  "greenhouse | stripe | Stripe",
+  "lever | netflix | Netflix"
+].join("\n");
+
+const DISC_DEFAULTS = {
+  titles: "security analyst, information security, soc analyst, cybersecurity, network analyst, security engineer, vulnerability",
+  loc: "new jersey, nj, philadelphia, pa, pennsylvania, delaware, de, new york, ny",
+  years: 1.5,
+  cap: 20
+};
+
+let DJOBS  = store.get(LS.disc, []);          // normalized + deduped postings
+let DSCORE = store.get(LS.dscore, {});        // cache: jobKey -> {fit_score,...}
+let DSTAT  = store.get(LS.dstat, {});         // jobKey -> new | tailored | applied
+
+const saveDisc  = () => store.set(LS.disc, DJOBS);
+const saveScore = () => store.set(LS.dscore, DSCORE);
+const saveStat  = () => store.set(LS.dstat, DSTAT);
+
+/* stable 32-bit hash, used for dedupe keys and resume fingerprints */
+function hash32(s){
+  let h=2166136261;
+  for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}
+  return (h>>>0).toString(36);
+}
+const normTitle = t => String(t||"").toLowerCase().replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+const normLoc   = l => String(l||"").toLowerCase().replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+const jobKey    = j => hash32([normTitle(j.company), normTitle(j.title), normLoc(j.location)].join("|"));
+const resumeFP  = () => hash32(corpus().slice(0,6000));
+
+function parseFeeds(text){
+  return String(text||"").split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{
+    const p=l.split("|").map(x=>x.trim());
+    return {type:(p[0]||"").toLowerCase(), slug:p[1]||"", name:p[2]||p[1]||""};
+  }).filter(c=>c.type&&c.slug);
+}
+
+function discSettings(){
+  const d=store.get(LS.feeds,null)||{};
+  return {
+    titles: d.titles ?? DISC_DEFAULTS.titles,
+    loc:    d.loc    ?? DISC_DEFAULTS.loc,
+    years:  d.years  ?? DISC_DEFAULTS.years,
+    cap:    d.cap    ?? DISC_DEFAULTS.cap,
+    feeds:  d.feeds  ?? DEFAULT_FEEDS
+  };
+}
+const saveDiscSettings = o => store.set(LS.feeds, {...discSettings(), ...o});
+
+/* ---- resume-derived profile ------------------------------
+   Everything the filter uses comes from the active resume, so
+   the feature works for any visitor rather than only for a
+   hardcoded candidate. ---- */
+function resumeProfile(){
+  const text=corpus();
+  const s=discSettings();
+  const certs=[];
+  [["Security+",/security\s*\+|comptia\s+security/i],["CySA+",/cysa\s*\+/i],["CISSP",/\bcissp\b/i],
+   ["CEH",/\bceh\b/i],["Network+",/network\s*\+/i],["CCNA",/\bccna\b/i]]
+    .forEach(([k,rx])=>{ if(rx.test(text)) certs.push(k) });
+  return {
+    text,
+    skills: new Set(terms(text)),
+    certs,
+    clearance: /\bclearance\b|ts\/sci/i.test(text),
+    years: Number(s.years)||0,
+    titles: s.titles.split(",").map(x=>x.trim().toLowerCase()).filter(Boolean),
+    locs: s.loc.split(",").map(x=>x.trim().toLowerCase()).filter(Boolean)
+  };
+}
+
+const SENIOR_RX=/\b(senior|staff|principal|lead|director|manager|head of|vp|chief|architect|sr\.?)\b/i;
+const JUNIOR_RX=/\b(intern|internship|co-?op|apprentice)\b/i;
+
+function requiredYears(desc){
+  let max=0;
+  const rx=/(\d{1,2})\s*\+?\s*(?:to\s*\d{1,2}\s*)?(?:or more\s*)?(?:years?|yrs?)\b[^.\n]{0,60}?(?:experience|background|working|industry)/gi;
+  let m; while((m=rx.exec(desc))){ const n=+m[1]; if(n>max) max=n }
+  return max;
+}
+
+/* ---- stage 1: rule filter (free) ---- */
+function ruleFilter(job, p){
+  const title=normTitle(job.title);
+  const desc=String(job.description||"");
+  const hay=title+" "+desc;
+
+  if(!p.titles.some(t=>title.includes(t))) return "title not in your targets";
+  if(JUNIOR_RX.test(title) && p.years>=1) return "internship";
+  if(SENIOR_RX.test(title) && p.years<5)  return "seniority above your level";
+
+  const need=requiredYears(desc);
+  if(need && need > p.years+1.5) return need+"+ years required";
+
+  if(/\b(security|public trust|secret)\s+clearance|ts\/sci/i.test(hay) && !p.clearance)
+    return "requires a clearance you cannot evidence";
+
+  if(!job.remote){
+    const loc=normLoc(job.location);
+    if(loc && !p.locs.some(l=>loc.includes(l))) return "location mismatch";
+  }
+
+  const overlap=terms(desc).filter(t=>p.skills.has(t));
+  if(overlap.length<2) return "almost no overlap with your material";
+
+  job._overlap=overlap;
+  return null;
+}
+
+/* ---- stage 2: model scoring (cached) ---- */
+function scorePrompt(job, resumeText){
+  return `You are scoring how well one candidate fits one job posting. Be strict and realistic.
+
+## Candidate resume
+"""
+${resumeText.slice(0,6000)}
+"""
+
+## Job posting
+Title: ${job.title}
+Company: ${job.company}
+Location: ${job.location||"not stated"}
+"""
+${String(job.description||"").slice(0,6000)}
+"""
+
+## Rules
+Judge only on evidence present in the resume. Do not assume unstated skills. Missing a hard requirement (a certification, a clearance, a degree, a minimum number of years) should lower the score sharply. A candidate who meets the core duties but lacks one preferred item is still a good fit.
+
+## Output
+Return ONLY a JSON object, no prose and no code fences:
+{"fit_score": <integer 0-100>, "matched_strengths": [<up to 5 short phrases from the resume that match this posting>], "gaps": [<up to 4 short phrases the posting asks for that the resume cannot evidence>], "reasoning": "<one sentence, max 25 words>"}`;
+}
+
+async function scoreOne(job, resumeText){
+  const raw=await callClaude(scorePrompt(job,resumeText),{});
+  const d=parseJSON(raw);
+  const n=Math.max(0,Math.min(100,Math.round(Number(d.fit_score)||0)));
+  return {
+    fit_score:n,
+    matched_strengths:(Array.isArray(d.matched_strengths)?d.matched_strengths:[]).slice(0,5).map(String),
+    gaps:(Array.isArray(d.gaps)?d.gaps:[]).slice(0,4).map(String),
+    reasoning:String(d.reasoning||"").slice(0,200),
+    at:Date.now()
+  };
+}
+
+const daysOld = j => j.posted ? (Date.now()-new Date(j.posted).getTime())/864e5 : null;
+
 /* ---------- tracker ---------- */
 let JOBS=store.get(LS.jobs,[]);
 const saveJobs=()=>store.set(LS.jobs,JOBS);
@@ -2104,6 +2368,197 @@ document.addEventListener("DOMContentLoaded",()=>{
   };
   $("#mockSend").addEventListener("click",mockGo);
   $("#mockIn").addEventListener("keydown",e=>{if(e.key==="Enter")mockGo()});
+
+  /* ---------- job discovery UI ---------- */
+  (function initDiscovery(){
+    const s=discSettings();
+    $("#dTitles").value=s.titles; $("#dLoc").value=s.loc;
+    $("#dYears").value=s.years;   $("#dCap").value=String(s.cap);
+    $("#dFeeds").value=s.feeds;
+
+    const F=store.get(LS.dfilt,{date:"7",score:"0",source:"",status:"",remote:false});
+    $("#fDate").value=F.date; $("#fScore").value=F.score; $("#fStatus").value=F.status; $("#fRemote").checked=!!F.remote;
+
+    const persistSettings=()=>saveDiscSettings({
+      titles:$("#dTitles").value, loc:$("#dLoc").value,
+      years:Number($("#dYears").value)||0, cap:Number($("#dCap").value)||20,
+      feeds:$("#dFeeds").value
+    });
+    ["dTitles","dLoc","dYears","dCap","dFeeds"].forEach(id=>
+      $("#"+id).addEventListener("change",persistSettings));
+
+    const persistFilters=()=>store.set(LS.dfilt,{
+      date:$("#fDate").value, score:$("#fScore").value, source:$("#fSource").value,
+      status:$("#fStatus").value, remote:$("#fRemote").checked
+    });
+
+    function fillSources(){
+      const cur=$("#fSource").value||F.source||"";
+      const all=[...new Set(DJOBS.map(j=>j.source))].sort();
+      $("#fSource").innerHTML=`<option value="">All sources</option>`+
+        all.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");
+      $("#fSource").value=all.includes(cur)?cur:"";
+    }
+
+    function visible(){
+      const dLim=Number($("#fDate").value), minS=Number($("#fScore").value);
+      const src=$("#fSource").value, st=$("#fStatus").value, rem=$("#fRemote").checked;
+      const fp=resumeFP();
+      return DJOBS.map(j=>({j,k:jobKey(j),sc:DSCORE[jobKey(j)+":"+fp]||null}))
+        .filter(({j,k,sc})=>{
+          const age=daysOld(j);
+          /* a posting with no reliable date is excluded from the windowed
+             filters rather than being guessed into them */
+          if(dLim>0 && (age===null || age>dLim)) return false;
+          if(minS>0 && (!sc || sc.fit_score<minS)) return false;
+          if(src && j.source!==src) return false;
+          if(st && (DSTAT[k]||"new")!==st) return false;
+          if(rem && !j.remote) return false;
+          return true;
+        })
+        .sort((a,b)=>{
+          const av=a.sc?a.sc.fit_score:-1, bv=b.sc?b.sc.fit_score:-1;
+          if(bv!==av) return bv-av;
+          const ad=daysOld(a.j), bd=daysOld(b.j);
+          return (ad===null?1e9:ad)-(bd===null?1e9:bd);
+        });
+    }
+
+    function render(){
+      fillSources();
+      $("#dFilterCard").hidden=!DJOBS.length;
+      const rows=visible();
+      const scored=rows.filter(r=>r.sc).length;
+      $("#dCount").textContent=DJOBS.length
+        ? `${rows.length} shown · ${scored} scored · ${DJOBS.length} held`
+        : "";
+      if(!DJOBS.length){ $("#dList").innerHTML=""; return }
+      if(!rows.length){
+        $("#dList").innerHTML=`<div class="card"><p class="card-note">Nothing matches these filters. Widen the date window or lower the match threshold.</p></div>`;
+        return;
+      }
+      $("#dList").innerHTML=rows.map(({j,k,sc})=>{
+        const cls=!sc?"n":sc.fit_score>=80?"g":sc.fit_score>=60?"a":"n";
+        const age=daysOld(j);
+        const when=age===null?"date unknown":age<1?"today":age<2?"yesterday":Math.round(age)+" days ago";
+        const st=DSTAT[k]||"new";
+        return `<div class="jcard">
+          <div class="jfit ${cls}">
+            <b>${sc?sc.fit_score+"%":"&mdash;"}</b><span>${sc?"match":"unscored"}</span>
+          </div>
+          <div class="jbody">
+            <h4><a href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">${esc(j.title)}</a></h4>
+            <div class="jmeta">
+              <b>${esc(j.company)}</b>
+              <span>${esc(j.location||"location not stated")}</span>
+              ${j.remote?'<span class="jbadge rem">Remote</span>':''}
+              <span>${when}</span>
+              <span class="jbadge">${esc(j.source)}</span>
+              ${st!=="new"?`<span class="jbadge st">${esc(st)}</span>`:''}
+            </div>
+            ${sc&&sc.matched_strengths.length?`<div class="chips">${sc.matched_strengths.map(x=>`<span class="chip chip-hit">${esc(x)}</span>`).join("")}</div>`:''}
+            ${sc&&sc.gaps.length?`<div class="jgap"><b>Gaps:</b> ${esc(sc.gaps.join(" · "))}</div>`:''}
+            ${sc&&sc.reasoning?`<div class="jwhy">${esc(sc.reasoning)}</div>`:''}
+            ${!sc&&j._overlap?`<div class="jgap">Passed the filter on: ${esc(j._overlap.slice(0,6).join(", "))}. Not scored yet.</div>`:''}
+            <div class="jacts">
+              <a class="btn btn-dark btn-sm" href="${esc(j.url)}" target="_blank" rel="noopener noreferrer">Apply</a>
+              <button class="btn btn-white btn-sm" data-tailor="${esc(k)}">Tailor resume</button>
+              <button class="btn btn-white btn-sm" data-mark="${esc(k)}" data-to="${st==="applied"?"new":"applied"}">${st==="applied"?"Mark unapplied":"Mark applied"}</button>
+            </div>
+          </div>
+        </div>`;
+      }).join("");
+    }
+
+    ["fDate","fScore","fSource","fStatus","fRemote"].forEach(id=>
+      $("#"+id).addEventListener("change",()=>{persistFilters();render()}));
+
+    $("#dList").addEventListener("click",e=>{
+      const t=e.target.closest("[data-tailor]"), m=e.target.closest("[data-mark]");
+      if(m){
+        DSTAT[m.dataset.mark]=m.dataset.to; saveStat(); render(); return;
+      }
+      if(t){
+        const row=DJOBS.find(j=>jobKey(j)===t.dataset.tailor);
+        if(!row) return;
+        DSTAT[t.dataset.tailor]="tailored"; saveStat();
+        $("#rJD").value=`${row.title}\n${row.company}\n${row.location||""}\n\n${row.description||""}`;
+        $("#tCo").value=row.company; $("#tRole").value=row.title;
+        switchTo("resume");
+        $("#rScan").click();
+      }
+    });
+
+    $("#dReset").addEventListener("click",()=>{
+      $("#dFeeds").value=DEFAULT_FEEDS; persistSettings();
+      stat($("#dStat"),"Feed list restored to the starter set.","ok");
+    });
+
+    $("#dScan").addEventListener("click",async()=>{
+      persistSettings();
+      const companies=parseFeeds($("#dFeeds").value);
+      if(!companies.length){stat($("#dStat"),"Add at least one feed line first.","err");return}
+      const b=$("#dScan"); b.disabled=true;
+      stat($("#dStat"),`Reading ${companies.length} feeds…`,"load");
+      try{
+        const res=await fetch(HOSTED_URL+"/v1/jobs",{
+          method:"POST",headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({companies})
+        });
+        if(!res.ok) throw new Error("Feed service returned "+res.status);
+        const d=await res.json();
+
+        $("#dSources").innerHTML=(d.sources||[]).map(s=>
+          `<div class="pick"><span class="r" style="color:${s.ok?"var(--green)":"var(--clay-2)"}">${s.ok?"✓":"✕"}</span>
+            <div><b>${esc(s.name)}</b><div class="meta">${s.ok?s.count+" postings":esc(s.error||"failed")}</div></div></div>`).join("");
+
+        const p=resumeProfile();
+        const seen=new Set(DJOBS.map(jobKey));
+        const reasons={}; let kept=0, dropped=0, dupes=0;
+
+        for(const j of (d.jobs||[])){
+          const k=jobKey(j);
+          if(seen.has(k)){dupes++; continue}
+          const why=ruleFilter(j,p);
+          if(why){dropped++; reasons[why]=(reasons[why]||0)+1; continue}
+          seen.add(k); DJOBS.push(j); kept++;
+        }
+        DJOBS=DJOBS.slice(-400);
+        saveDisc(); render();
+
+        const top=Object.entries(reasons).sort((a,b)=>b[1]-a[1]).slice(0,3)
+          .map(([r,n])=>`${n} ${r}`).join(", ");
+        stat($("#dStat"),`${kept} new to review. ${dropped} filtered out${top?" ("+top+")":""}${dupes?", "+dupes+" already held":""}.`,"ok");
+      }catch(err){
+        stat($("#dStat"),err.message,"err");
+      }
+      b.disabled=false;
+    });
+
+    $("#dScore").addEventListener("click",async()=>{
+      const fp=resumeFP(), resumeText=corpus();
+      const todo=DJOBS.filter(j=>!DSCORE[jobKey(j)+":"+fp]).slice(0,discSettings().cap);
+      if(!todo.length){stat($("#dStat"),DJOBS.length?"Everything held is already scored against this resume.":"Scan for postings first.","ok");return}
+      const b=$("#dScore"); b.disabled=true;
+      let done=0, failed=0;
+      for(const j of todo){
+        stat($("#dStat"),`Scoring ${done+1} of ${todo.length}…`,"load");
+        try{
+          DSCORE[jobKey(j)+":"+fp]=await scoreOne(j,resumeText);
+          done++;
+          if(done%4===0){saveScore(); render()}
+        }catch(err){
+          failed++;
+          if(failed>=3){stat($("#dStat"),"Scoring stopped: "+err.message,"err");break}
+        }
+      }
+      saveScore(); render();
+      if(done) stat($("#dStat"),`Scored ${done}${failed?", "+failed+" failed":""}. Sorted by match, highest first.`,"ok");
+      b.disabled=false;
+    });
+
+    render();
+  })();
 });
 </script>
 </body>
