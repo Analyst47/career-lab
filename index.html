@@ -461,8 +461,12 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
         <span class="k">05</span><span class="t">Job matches</span>
         <span class="d">Live openings scored against your resume</span>
       </button>
+      <button class="sw" role="tab" data-tab="cover" aria-selected="false">
+        <span class="k">06</span><span class="t">Cover letter</span>
+        <span class="d">Specific, plain, defensible — no invented enthusiasm</span>
+      </button>
       <button class="sw" role="tab" data-tab="set" aria-selected="false">
-        <span class="k">06</span><span class="t">Settings</span>
+        <span class="k">07</span><span class="t">Settings</span>
         <span class="d">API key, model, stored data</span>
       </button>
     </div>
@@ -764,6 +768,65 @@ input[type=file]::file-selector-button:hover{border-color:var(--ink)}
       </div>
 
       <div id="dList"></div>
+    </div>
+
+    <!-- ---------- COVER LETTER ---------- -->
+    <div class="panel" data-panel="cover" role="tabpanel" hidden>
+      <div class="card on-white">
+        <h3>Cover letter</h3>
+        <p class="card-note">The flow: paste the posting &rarr; add the few things only you know &rarr; <b>Generate</b> (uses your key). It writes a specific, plainly-worded letter drawn only from your record and the posting. No invented enthusiasm, no manufactured stories, no em dashes. Then it flags any phrasing that reads generic so you can fix it in your own words.</p>
+        <div class="field">
+          <label for="cJD">Job description</label>
+          <textarea id="cJD" class="tall" placeholder="Paste the full posting."></textarea>
+        </div>
+        <div class="g2">
+          <div class="field" style="margin-top:0">
+            <label for="cCo">Company</label>
+            <input type="text" id="cCo" class="inp" placeholder="e.g. UHS" />
+          </div>
+          <div class="field" style="margin-top:0">
+            <label for="cRole">Role title</label>
+            <input type="text" id="cRole" class="inp" placeholder="e.g. Associate Information Security Analyst" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="cHiring">Hiring manager name (optional)</label>
+          <input type="text" id="cHiring" class="inp" placeholder="Leave blank for a neutral greeting" />
+        </div>
+        <div class="field">
+          <label for="cWhy">Why this company, in your own words (optional but worth it)</label>
+          <textarea id="cWhy" placeholder="One real reason you want THIS job. A team, a product, a mission, something you read. This is the part no AI can invent for you, and it is what stops the letter reading generic. A rough sentence is fine."></textarea>
+          <p class="hint">Anything you write here is used verbatim as the honest core of the letter. Leave it blank and the letter stays factual rather than inventing a reason you care.</p>
+        </div>
+        <div class="bar">
+          <button class="btn btn-dark" id="cGen">Generate letter</button>
+          <button class="btn btn-white" id="cCopyPrompt">Copy prompt</button>
+          <span class="sp"></span>
+          <span class="stat-line" id="cStat"></span>
+        </div>
+        <p class="hint" style="margin-top:14px">Uses your experience bank, or an uploaded resume if you set one in the ATS match tab. Nothing here is stored on a server.</p>
+      </div>
+
+      <div class="brief" id="cOutCard" hidden style="margin-top:20px">
+        <header class="brief-h">
+          <span class="brief-n">DRAFT</span>
+          <div style="flex:1;min-width:0">
+            <div class="cat">Tailored for this posting</div>
+            <h4>Cover letter</h4>
+          </div>
+          <button class="btn btn-white btn-sm" id="cCopy" style="align-self:center;flex:none">Copy</button>
+        </header>
+        <div style="padding:26px 30px;background:var(--white)">
+          <p class="card-note" style="margin:0 0 18px">Read it aloud before you send it. If a sentence is not true, or you would not say it in an interview, cut it. This is a draft to make yours, not a finished artifact.</p>
+          <pre id="cOut" style="white-space:pre-wrap;font-family:var(--f-sans);font-size:15px;line-height:1.8;margin:0"></pre>
+        </div>
+      </div>
+
+      <div class="card" id="cTellCard" hidden>
+        <h3>Reads-generic check</h3>
+        <p class="card-note">These are the patterns that make a letter feel machine-written to a recruiter and to a detector. This is a heuristic, not a detector, and it cannot promise anything about any specific screening tool. Fix what it flags in your own words and the letter reads like you.</p>
+        <div id="cTells"></div>
+      </div>
     </div>
 
     <div class="panel" data-panel="set" role="tabpanel" hidden>
@@ -1931,6 +1994,109 @@ async function scoreOne(job, resumeText){
 
 const daysOld = j => j.posted ? (Date.now()-new Date(j.posted).getTime())/864e5 : null;
 
+
+/* ============================================================
+   COVER LETTER
+   Writes a specific, plainly-worded letter grounded only in the
+   candidate's own record and the posting. No invented enthusiasm,
+   no manufactured anecdotes, no em dashes. Then a heuristic pass
+   flags the phrasing that makes letters read machine-written, so
+   the candidate can rewrite it in their own words.
+
+   This is deliberately not an "AI-detector bypass". No such
+   guarantee is honest: detectors are themselves unreliable, and a
+   letter that reads human because it is generic still collapses in
+   the interview. Specific and true is the only durable version.
+   ============================================================ */
+
+function coverPrompt({jd,company,role,hiring,why}){
+  const src=bankSrc();
+  return `Write a cover letter for this candidate and this job. You are not writing fiction and you are not writing marketing copy.
+
+## The only material you may draw from
+"""
+${src}
+"""
+
+## The job
+Company: ${company||"(not given)"}
+Role: ${role||"(not given)"}
+${hiring?"Hiring manager: "+hiring:""}
+Posting:
+"""
+${jd}
+"""
+
+${why?`## The candidate's own reason for wanting this role (use this as the honest heart of the letter, in their voice, do not embellish it)\n"""\n${why}\n"""\n`:`## Note\nThe candidate gave no personal reason for wanting this role. Do NOT invent one. Do not write that they are "passionate about" or "excited by" the company. Keep the letter factual: what they have done that matches what the posting needs.\n`}
+
+## How to write it
+- Draw every specific claim from the material above. Do not invent employers, projects, metrics, tools, or outcomes. If the match is partial, write honestly to the parts that fit rather than inflating.
+- Open with a real sentence about why the candidate is a fit for THIS role, not "I am writing to express my interest in..." and not "I am excited to apply for...". Never open with a definition of the company or the role.
+- Three short body paragraphs at most. Each makes one concrete point and backs it with something specific the candidate actually did.
+- Mirror the posting's own terms for skills the candidate genuinely has, so it reads as a direct answer to the posting.
+- Plain, direct, conversational-professional. Short and medium sentences, varied. The way a competent person writes when they respect the reader's time.
+- End with one plain sentence of availability. No "I look forward to hearing from you at your earliest convenience."
+
+## Banned, because they read as machine-written
+- NO em dashes or en dashes anywhere. Use a comma, a full stop, or a rewrite. This is a hard rule.
+- No "I am confident that my skills and experience", "proven track record", "I am passionate about", "makes me an ideal candidate", "I am excited about the opportunity", "in today's fast-paced", "leverage my expertise", "align with your needs", "I believe my background".
+- No hollow superlatives (world-class, cutting-edge, seamless, robust) unless they appear in the candidate's own material.
+- No sentence that could appear in anyone else's letter for any other job. If a line is not specific to this candidate and this posting, cut it.
+
+## Output
+Return ONLY the letter as plain text. No preamble, no notes, no markdown, no subject line. Start with the greeting. Use "${hiring?"Dear "+hiring+",":"Dear Hiring Manager,"}" as the first line.`;
+}
+
+/* Belt and braces: even with the prompt rule, strip any dash a model
+   slips in and normalize spacing. */
+function stripDashes(t){
+  return String(t)
+    .replace(/\s*[—–]\s*/g,", ")   // em/en dash to comma
+    .replace(/ ,/g,",")
+    .replace(/,\s*,/g,",")
+    .replace(/[ \t]{2,}/g," ")
+    .replace(/\n{3,}/g,"\n\n")
+    .trim();
+}
+
+/* ---- the reads-generic heuristic ----
+   Each rule is a pattern that recruiters and detectors both treat
+   as a tell. This flags them; it does not claim to be a detector. */
+const TELLS=[
+  {rx:/\bI am writing to (express|apply|inform)/i, why:'"I am writing to..." is the most common AI and template opener. Start with a specific point instead.'},
+  {rx:/\bI am excited to (apply|be applying)/i, why:'"I am excited to apply" is generic filler. Say something only true of this role.'},
+  {rx:/\bproven track record\b/i, why:'"proven track record" is empty. Replace with the specific result you are pointing to.'},
+  {rx:/\bI am confident that my (skills|experience|background)/i, why:'"I am confident that my skills..." is boilerplate. Show the fit instead of asserting it.'},
+  {rx:/\bmakes? me an? (ideal|perfect|strong) (candidate|fit)\b/i, why:'"makes me an ideal candidate" is a claim with no evidence. Cut it or back it.'},
+  {rx:/\bI am passionate about\b/i, why:'"I am passionate about" reads as manufactured enthusiasm. Only keep it if it is genuinely yours and specific.'},
+  {rx:/\bin today'?s (fast-paced|ever-changing|competitive|digital)\b/i, why:'"in today\'s fast-paced world" is pure padding. Delete the whole clause.'},
+  {rx:/\bleverage my (expertise|experience|skills)\b/i, why:'"leverage my expertise" is corporate filler. Say what you would actually do.'},
+  {rx:/\balign(s)? with your (needs|goals|mission|values)\b/i, why:'"aligns with your needs" is vague. Name the specific need and how you meet it.'},
+  {rx:/\b(world-class|cutting-edge|seamless(ly)?|synerg|robust solution)\b/i, why:'Hollow superlative. Recruiters skim past these. Use a concrete detail instead.'},
+  {rx:/\bat your earliest convenience\b/i, why:'"at your earliest convenience" is a dated cliché. A plain "I am available to talk" is better.'},
+  {rx:/\bthank you for (considering|your time and consideration)\b/i, why:'"thank you for your time and consideration" is the default AI closer. A simpler sign-off reads more human.'},
+  {rx:/[—–]/, why:'Em or en dash found. Your letters avoid these entirely. Replace with a comma or full stop.'},
+  {rx:/\bI believe (my|that my)\b/i, why:'"I believe my background..." hedges. State it directly.'},
+  {rx:/\bdynamic (professional|individual|environment)\b/i, why:'"dynamic professional" is a stock phrase. Be specific about what you do.'}
+];
+
+function coverTells(text){
+  const hits=[];
+  for(const t of TELLS){
+    const m=text.match(t.rx);
+    if(m) hits.push({phrase:m[0],why:t.why});
+  }
+  // sentence-length monotony: many similar-length sentences reads machine-even
+  const sents=text.split(/(?<=[.!?])\s+/).filter(s=>s.trim().length>15);
+  if(sents.length>=5){
+    const lens=sents.map(s=>s.split(/\s+/).length);
+    const avg=lens.reduce((a,b)=>a+b,0)/lens.length;
+    const variance=lens.reduce((a,b)=>a+(b-avg)**2,0)/lens.length;
+    if(variance<9) hits.push({phrase:"sentence rhythm",why:"Sentences are all a similar length, which reads mechanically even. Break one or two up, or join two, so the rhythm varies the way human writing does."});
+  }
+  return hits;
+}
+
 /* ---------- tracker ---------- */
 let JOBS=store.get(LS.jobs,[]);
 const saveJobs=()=>store.set(LS.jobs,JOBS);
@@ -2368,6 +2534,53 @@ document.addEventListener("DOMContentLoaded",()=>{
   };
   $("#mockSend").addEventListener("click",mockGo);
   $("#mockIn").addEventListener("keydown",e=>{if(e.key==="Enter")mockGo()});
+
+  /* ---------- cover letter UI ---------- */
+  (function initCover(){
+    const renderTells=(text)=>{
+      const tells=coverTells(text);
+      $("#cTellCard").hidden=false;
+      if(!tells.length){
+        $("#cTells").innerHTML=`<div class="pick"><span class="r" style="color:var(--green)">✓</span><div>No generic-writing patterns found. Still read it aloud and make sure every line is true and sounds like you.</div></div>`;
+        return;
+      }
+      $("#cTells").innerHTML=tells.map(t=>
+        `<div class="pick"><span class="r" style="color:var(--amber)">!</span>
+          <div><b>“${esc(t.phrase)}”</b><div class="meta">${esc(t.why)}</div></div></div>`).join("");
+    };
+
+    async function gen(){
+      const jd=$("#cJD").value.trim();
+      if(jd.length<60){stat($("#cStat"),"Paste the job description first.","err");return}
+      const b=$("#cGen"); b.disabled=true; stat($("#cStat"),"Writing…","load");
+      try{
+        const raw=await callClaude(coverPrompt({
+          jd, company:$("#cCo").value.trim(), role:$("#cRole").value.trim(),
+          hiring:$("#cHiring").value.trim(), why:$("#cWhy").value.trim()
+        }),{onStatus:m=>stat($("#cStat"),m,"load")});
+        const letter=stripDashes(cleanResume(raw));
+        $("#cOut").textContent=letter;
+        $("#cOutCard").hidden=false;
+        renderTells(letter);
+        stat($("#cStat"),"Draft ready. Read it aloud before sending.","ok");
+        $("#cOutCard").scrollIntoView({behavior:"smooth",block:"start"});
+      }catch(err){
+        stat($("#cStat"),err.message,"err");
+      }
+      b.disabled=false;
+    }
+
+    $("#cGen").addEventListener("click",gen);
+    $("#cCopyPrompt").addEventListener("click",()=>{
+      const jd=$("#cJD").value.trim();
+      if(jd.length<60){stat($("#cStat"),"Paste the job description first.","err");return}
+      copyText(coverPrompt({
+        jd, company:$("#cCo").value.trim(), role:$("#cRole").value.trim(),
+        hiring:$("#cHiring").value.trim(), why:$("#cWhy").value.trim()
+      }),$("#cStat"),"Prompt copied. Paste it into any assistant.");
+    });
+    $("#cCopy").addEventListener("click",()=>copyText($("#cOut").textContent,$("#cStat"),"Letter copied."));
+  })();
 
   /* ---------- job discovery UI ---------- */
   (function initDiscovery(){
